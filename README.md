@@ -2,12 +2,10 @@
 
 Super simple WYSIWYG Editor.
 
-[![Build Status](https://secure.travis-ci.org/summernote/summernote.svg)](http://travis-ci.org/summernote/summernote)
-[![npm version](https://badge.fury.io/js/summernote.svg)](http://badge.fury.io/js/summernote)
-[![Dependency Status](https://gemnasium.com/summernote/summernote.svg)](https://gemnasium.com/summernote/summernote)
-[![Coverage Status](https://coveralls.io/repos/summernote/summernote/badge.svg?branch=develop&service=github)](https://coveralls.io/github/summernote/summernote?branch=develop)
+[![Build Status](https://secure.travis-ci.org/AshDevFr/winternote.svg)](http://travis-ci.org/AshDevFr/winternote)
+[![npm version](https://badge.fury.io/js/winternote.svg)](http://badge.fury.io/js/winternote)
+[![Coverage Status](https://coveralls.io/repos/AshDevFr/winternote/badge.svg?branch=develop&service=github)](https://coveralls.io/github/AshDevFr/winternote?branch=develop)
 
-[![Sauce Test Status](https://saucelabs.com/browser-matrix/summernoteis.svg)](https://saucelabs.com/u/summernoteis)
 
 ### Summernote
 Summernote is a JavaScript library that helps you create WYSIWYG editors online.
@@ -106,9 +104,6 @@ The code view allows the user to enter script contents. Make sure to filter/[san
 # grunt-cli is need by grunt; you might have this installed already
 npm install -g grunt-cli
 npm install
-
-# build full version of summernote: dist/summernote.js
-grunt build
 
 # generate minified copy: dist/summernote.min.js, dist/summernote.css
 grunt dist

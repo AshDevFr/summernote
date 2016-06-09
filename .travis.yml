@@ -7,23 +7,17 @@ before_script:
 - npm install -g grunt-cli
 script:
 - grunt test-travis --verbose
-- if [[ $TRAVIS_PULL_REQUEST == "false" ]]; then grunt saucelabs-test; fi
 before_deploy:
 - npm install
 - grunt build
 - grunt dist
 deploy:
   provider: npm
-  email: susukang98@gmail.com
+  email: ashdevfr@gmail.com
   api_key:
-    secure: TYJfuTLZKbYvTskuMlmuKnQb5F35GFPN2AqSf0RtZYWGLozIaIkKcpTVbjzo859FWuxPjci53FGiJih3+0iVfIC39CDTrFZutubn8qduOfRAVTL1WzeQvdww8miJNwUY59HmoOa78OtbNCVg/N7zFSZzRXAcgje8IADQFIISwk8=
+    secure: DCBPi6SVGY++JpSL59j+Y6l6m03uVzM6xF79qs7DkS7IvTSuO8VYudOUqGA01UOHLkw5pdxJf00ovCo0vhst5fcTVvWYi27W8OcsHbT/qaoZqVbQnmZtD/QLDyXUtJZGkXs21j8fwihJgLUBAO9YtJkcXxMSq5qfM8vQdX5Q+7Z6wUAA3pyBzRnXjvLjxmDlHl2jVK0S7a/6A7Wq7stl9hBkYi1pgGu+2cHH+UezmRkwhR3xiBHBN66PkMBWlzJwuHEk31tPcKXGjuYqi2W8UqkI5VekZ+c2suCeo0jIXKCVvPHaXcsnKpUGFE1kpXkfRwlUuKm+vaA4AhtzYUTgVHbgF0X7BxjFiSGaIZwR6+sAEBKoIcMx2McaI0JGb6C4Fg092CI93pjNxtvdLifn5rd9FDFvNEUnYA7NpWl5MYNIK8RcCGIDDNdP/bp40GbQs3JAAJA6rPk1xKy+4ocwLbk4sdE509WO0lLjQkUIEfs2XmzE5NMqvUteL3o3BZuNbCj9Nw6Vc5uujeZZvXiJwcTVw2NBEWdlXiun6OXk98GckWeOcTjTtLhDmHoHfdBi31nhjdCqr5ZYbYpuHQEcSoT/2t60tO/MZcDDdT1hGLlI9LdN4u2wMXONQbfi6fDYV8Cp9fmOs5sVEVlSxapjPuS6137KqqEm97JMQPv3N7U=
   on:
     tags: true
     branch: develop
-addons:
-  sauce_connect:
-    username: 'summernoteis'
-    access_key:
-      secure: "E9Mq/lKN1xNA+PungEtlDEYqx5Dm52GPuvRMjZPkv5GiuFjof70CuqOIbqSh5YcDvn6/FmPlmlcZVNcXGzKkkSY9qqFpsbmsu2VXmbHlmpjr0Yhm7LQLoZYj+fmrO3WITai6yEyvb8cjGTjHhTjULDORJgC9U4DLfzju5OQFW0Q="
 after_success:
 - grunt coveralls:travis
