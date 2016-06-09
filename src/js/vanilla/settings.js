@@ -13,17 +13,19 @@ define([
   'summernote/base/module/AutoSync',
   'summernote/base/module/Placeholder',
   'summernote/vanilla/module/Toolbar',
-  'summernote/bs3/module/ImageDialog',
-  'summernote/bs3/module/ImagePopover'
+  'summernote/vanilla/module/AirPopover',
+  'summernote/vanilla/module/Hint'
 ], function (
   ui, dom, lang,
   Editor, Clipboard, Dropzone, Codeview, Statusbar, Fullscreen, Handle, AutoLink, AutoSync, Placeholder,
-  Toolbar, ImageDialog, ImagePopover
+  Toolbar, AirPopover, Hint
 ) {
   $.summernote = $.extend($.summernote, {
     version: '@VERSION',
     ui: ui,
     dom: dom,
+
+    plugins: {},
 
     options: {
       modules: {
@@ -38,31 +40,13 @@ define([
         'autoSync': AutoSync,
         'placeholder': Placeholder,
         'toolbar': Toolbar,
-        'imageDialog': ImageDialog,
-        'imagePopover': ImagePopover
-      },
-      // popover
-      popover: {
-        image: [
-          ['imagesize', ['imageSize100', 'imageSize50', 'imageSize25']],
-          ['float', ['floatLeft', 'floatRight', 'floatNone']],
-          ['remove', ['removeMedia']]
-        ],
-        link: [
-          ['link', ['linkDialogShow', 'unlink']]
-        ],
-        air: [
-          ['color', ['color']],
-          ['font', ['bold', 'underline', 'clear']],
-          ['para', ['ul', 'paragraph']],
-          ['table', ['table']],
-          ['insert', ['link', 'picture']]
-        ]
+        'airPopover': AirPopover,
+        'hint': Hint
       },
 
       buttons: {},
 
-      airMode: false,
+      airMode: true,
 
       width: null,
       height: null,
@@ -80,7 +64,9 @@ define([
         onBlur: null,
         onEnter: null,
         onKeyup: null,
-        onKeydown: null
+        onKeydown: null,
+        onImageUpload: null,
+        onImageUploadError: null
       },
 
       keyMap: {

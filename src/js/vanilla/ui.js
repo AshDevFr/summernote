@@ -2,10 +2,10 @@ define([
   'summernote/base/renderer'
 ], function (renderer) {
   var ui = {
-    editor: renderer.create('<div class="note-editor">'),
+    editor: renderer.create('<div class="note-editor note-frame">'),
     toolbar: renderer.create('<div class="note-toolbar">'),
     editingArea: renderer.create('<div class="note-editing-area">'),
-    codable: renderer.create('<div class="note-codable">'),
+    codable: renderer.create('<textarea class="note-codable">'),
     editable: renderer.create('<div class="note-editable" contentEditable="true">'),
     buttonGroup: renderer.create('<span class="note-btn-group">'),
     button: renderer.create('<button class="note-btn">'),
@@ -41,10 +41,17 @@ define([
         note: $note,
         editor: $editor,
         toolbar: $editor.find('.note-toolbar'),
+        editingArea: $editor.find('.note-editing-area'),
         editable: $editor.find('.note-editable'),
         codable: $editor.find('.note-codable'),
         statusbar: $editor.find('.note-statusbar')
       };
+    },
+
+    removeLayout: function ($note, layoutInfo) {
+      $note.html(layoutInfo.editable.html());
+      layoutInfo.editor.remove();
+      $note.show();
     }
   };
 
