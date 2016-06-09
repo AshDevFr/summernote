@@ -1,7 +1,10 @@
 language: node_js
 sudo: false
 node_js: 5.1
+os:
+- osx
 before_script:
+- brew install --verbose fontforge
 - node --version
 - npm --version
 - npm install -g grunt-cli
