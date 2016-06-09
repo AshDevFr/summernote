@@ -76,11 +76,26 @@ module.exports = function (grunt) {
 
     // bulid source(grunt-build.js).
     build: {
-      all: {
+      bs3: {
         baseUrl: 'src/js',        // base url
         startFile: 'intro.js',    // intro part
         endFile: 'outro.js',      // outro part
-        outFile: 'dist/summernote.js' // out file
+        outFile: 'dist/summernote.bs3.js', // out file
+        include: 'summernote/bs3/settings'
+      },
+      lite: {
+        baseUrl: 'src/js',        // base url
+        startFile: 'intro.js',    // intro part
+        endFile: 'outro.js',      // outro part
+        outFile: 'dist/summernote.lite.js', // out file
+        include: 'summernote/lite/settings'
+      },
+      vanilla: {
+        baseUrl: 'src/js',        // base url
+        startFile: 'intro.js',    // intro part
+        endFile: 'outro.js',      // outro part
+        outFile: 'dist/summernote.js', // out file
+        include: 'summernote/vanilla/settings'
       }
     },
 
@@ -120,6 +135,8 @@ module.exports = function (grunt) {
       all: {
         files: [
           { 'dist/summernote.min.js': ['dist/summernote.js'] },
+          { 'dist/summernote.lite.min.js': ['dist/summernote.lite.js'] },
+          { 'dist/summernote.bs3.min.js': ['dist/summernote.bs3.js'] },
           {
             expand: true,
             cwd: 'dist/lang',
@@ -304,7 +321,8 @@ module.exports = function (grunt) {
   // dist: make dist files
   grunt.registerTask('dist', [
     'clean:dist',
-    'build', 'webfont', 'lint', 'karma:dist',
+    'build:bs3', 'build:lite', 'build:vanilla',
+    'webfont', 'lint', 'karma:dist',
     'copy:dist', 'uglify', 'recess', 'compress'
   ]);
 
