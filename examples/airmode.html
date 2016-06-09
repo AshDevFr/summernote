@@ -8,10 +8,6 @@
   <!-- include jquery -->
   <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.js"></script> 
 
-  <!-- include libs stylesheets -->
-  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" />
-  <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/3.3.5/js/bootstrap.min.js"></script> 
-
   <!-- include summernote -->
   <link rel="stylesheet" href="../dist/summernote.css">
   <script type="text/javascript" src="../dist/summernote.js"></script>
@@ -21,7 +17,17 @@
       $('.summernote').summernote({
         height: 300,
         tabsize: 2,
-        airMode: true
+        airMode: true,
+        popover: {
+          air: {
+            update : function (style, position) {
+              console.log('update', style, position);
+            },
+            hide : function (hide) {
+              console.log('hide');
+            }
+          }
+        }
       });
     });
   </script>
