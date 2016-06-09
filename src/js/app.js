@@ -35,6 +35,9 @@ require(['jquery', 'summernote'], function ($) {
     case 'lite':
       promise = requireByPromise(['summernote/lite/settings']);
       break;
+    case 'vanilla':
+      promise = requireByPromise(['summernote/vanilla/settings']);
+      break;
     case 'bs3':
       promise = requireByPromise(['bootstrap', 'summernote/bs3/settings']).then(function () {
         return requireByPromise(['lang']);
