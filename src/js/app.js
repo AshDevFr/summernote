@@ -49,7 +49,6 @@ require(['jquery', 'summernote'], function ($) {
     // initialize summernote
     $('.summernote').summernote({
       height: 300,
-      lang: 'ko-KR',
       placeholder: 'type here...'
     });
   });
