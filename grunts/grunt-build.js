@@ -54,7 +54,7 @@ module.exports = function (grunt) {
         return contents;
       },
       excludeShallow: ['jquery', 'codemirror', 'app'],
-      include: ['summernote/vanilla/settings'],
+      include: [self.data.include],
       paths: {
         jquery: 'empty:',
         codemirror: 'empty:'
