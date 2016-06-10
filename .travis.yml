@@ -4,7 +4,6 @@ node_js: 5.1
 os:
 - osx
 before_script:
-- brew install --verbose fontforge
 - node --version
 - npm --version
 - npm install -g grunt-cli
@@ -13,7 +12,7 @@ script:
 before_deploy:
 - npm install
 - grunt build
-- grunt dist
+- grunt dist --verbose
 deploy:
   provider: npm
   email: ashdevfr@gmail.com
