@@ -48,11 +48,11 @@ define([
       }
     };
 
-    this.getResult = function (idx, keyword, callback) {
+    this.getResult = function (idx, keyword, callback, bnd) {
       this.searchKeyword(idx, keyword, function (items) {
         items = items || [];
         if (items.length) {
-          callback(idx, items);
+          callback(items, bnd);
         }
       });
     };
@@ -68,7 +68,7 @@ define([
 
             hints.forEach(function (hint, idx) {
               if (typeof hint.callback === 'function' && hint.match.test(keyword)) {
-                self.getResult(idx, keyword, hint.callback);
+                self.getResult(idx, keyword, hint.callback, bnd);
               }
             });
           }
