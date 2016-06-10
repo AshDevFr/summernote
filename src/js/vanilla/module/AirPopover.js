@@ -1,9 +1,8 @@
 define([
   'summernote/base/core/agent',
   'summernote/base/core/func',
-  'summernote/base/core/list',
-  'summernote/base/core/dom'
-], function (agent, func, list, dom) {
+  'summernote/base/core/list'
+], function (agent, func, list) {
   var AirPopover = function (context) {
     var self = this;
 
@@ -23,7 +22,7 @@ define([
           return;
         }
 
-        if (!e.relatedTarget || !dom.ancestor(e.relatedTarget, func.eq(self.$popover[0]))) {
+        if (!e.relatedTarget) {
           self.hide();
         }
       }
