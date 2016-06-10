@@ -34,8 +34,8 @@
               }));
             },
             match: /\B:([\-+\w]+)$/,
-            callback: function (index, items) {
-              console.log('Result list:', index, items);
+            callback: function (items, position) {
+              console.log('Result list:', items, position);
               var node = document.createElement('img');
               node.src = emojiUrls[items[0]];
               node.setAttribute('width', '20px');
