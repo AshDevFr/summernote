@@ -292,6 +292,7 @@ module.exports = function (grunt) {
         dest: 'src/icons/dist/font',
         destCss: 'src/icons/dist/',
         options: {
+          engine: 'node',
           font: 'summernote',
           template: 'src/icons/templates/summernote.css'
         }
