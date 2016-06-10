@@ -52,7 +52,7 @@ define([
       this.searchKeyword(idx, keyword, function (items) {
         items = items || [];
         if (items.length) {
-          callback(items, bnd);
+          callback(items, keyword, bnd);
         }
       });
     };
