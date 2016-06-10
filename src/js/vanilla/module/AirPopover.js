@@ -12,6 +12,9 @@ define([
       'summernote.keyup summernote.mouseup summernote.scroll': function () {
         self.update();
       },
+      'summernote.change summernote.dialog.shown': function () {
+        self.update();
+      },
       'summernote.focusout': function (we, e) {
         // [workaround] Firefox doesn't support relatedTarget on focusout
         //  - Ignore hide action on focus out in FF.
