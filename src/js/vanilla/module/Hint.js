@@ -37,7 +37,7 @@ define([
       }
 
     };
-    
+
     this.searchKeyword = function (index, keyword, callback) {
       var hint = hints[index];
       if (hint && hint.match.test(keyword) && hint.search) {
@@ -51,9 +51,7 @@ define([
     this.getResult = function (idx, keyword, callback, bnd) {
       this.searchKeyword(idx, keyword, function (items) {
         items = items || [];
-        if (items.length) {
-          callback(items, keyword, bnd);
-        }
+        callback(items, keyword, bnd);
       });
     };
 
