@@ -6,7 +6,7 @@
  * Copyright 2013-2016 Alan Hong. and other contributors
  * summernote may be freely distributed under the MIT license./
  *
- * Date: 2016-06-10T00:19Z
+ * Date: 2016-06-10T00:34Z
  */
 (function (factory) {
   /* global define */
@@ -4966,9 +4966,6 @@
     this.events = {
       'summernote.keyup summernote.mouseup summernote.scroll': function () {
         self.update();
-      },
-      'summernote.change summernote.dialog.shown': function () {
-        self.hide();
       },
       'summernote.focusout': function (we, e) {
         // [workaround] Firefox doesn't support relatedTarget on focusout
