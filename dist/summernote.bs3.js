@@ -1,12 +1,12 @@
 /**
- * Super simple wysiwyg editor v0.8.9
+ * Super simple wysiwyg editor v0.8.10
  * http://summernote.org/
  *
  * summernote.js
  * Copyright 2013-2016 Alan Hong. and other contributors
  * summernote may be freely distributed under the MIT license./
  *
- * Date: 2016-06-11T00:02Z
+ * Date: 2016-06-11T00:40Z
  */
 (function (factory) {
   /* global define */
@@ -3262,7 +3262,7 @@
      * @return {Object}
      */
     this.fromNode = function ($node) {
-      var properties = ['font-family', 'font-size', 'text-align', 'list-style-type', 'line-height'];
+      var properties = ['font-family', 'font-size', 'text-align', 'list-style-type', 'line-height', 'color'];
       var styleInfo = jQueryCSS($node, properties) || {};
       styleInfo['font-size'] = parseInt(styleInfo['font-size'], 10);
       return styleInfo;
@@ -4216,7 +4216,7 @@
     /**
      * setFontName
      *
-     * @param {String} value - px
+     * @param {String} value
      */
     this.setFontName = function (value) {
       var rng = this.createRange();
@@ -4240,6 +4240,38 @@
         beforeCommand();
         $(style.styleNodes(rng)).css({
           'font-family': value
+        });
+        afterCommand();
+      }
+    };
+
+    /**
+     * fontColor
+     *
+     * @param {String} value
+     */
+    this.fontColor = function (value) {
+      var rng = this.createRange();
+
+      if (rng && rng.isCollapsed()) {
+        var spans = style.styleNodes(rng);
+        var firstSpan = list.head(spans);
+
+        $(spans).css({
+          'color': value
+        });
+
+        // [workaround] added styled bogus span for style
+        //  - also bogus character needed for cursor position
+        if (firstSpan && !dom.nodeLength(firstSpan)) {
+          firstSpan.innerHTML = dom.ZERO_WIDTH_NBSP_CHAR;
+          range.createFromNodeAfter(firstSpan.firstChild).select();
+          $editable.data(KEY_BOGUS, firstSpan);
+        }
+      } else {
+        beforeCommand();
+        $(style.styleNodes(rng)).css({
+          'color': value
         });
         afterCommand();
       }
@@ -6427,7 +6459,7 @@
 
       var body = [
         '<p class="text-center">',
-        '<a href="http://summernote.org/" target="_blank">Summernote 0.8.9</a> · ',
+        '<a href="http://summernote.org/" target="_blank">Summernote 0.8.10</a> · ',
         '<a href="https://github.com/summernote/summernote" target="_blank">Project</a> · ',
         '<a href="https://github.com/summernote/summernote/issues" target="_blank">Issues</a>',
         '</p>'
@@ -6772,7 +6804,7 @@
 
 
   $.summernote = $.extend($.summernote, {
-    version: '0.8.9',
+    version: '0.8.10',
     ui: ui,
     dom: dom,
 
