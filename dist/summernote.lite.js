@@ -1,12 +1,12 @@
 /**
- * Super simple wysiwyg editor v0.8.8
+ * Super simple wysiwyg editor v0.8.9
  * http://summernote.org/
  *
  * summernote.js
  * Copyright 2013-2016 Alan Hong. and other contributors
  * summernote may be freely distributed under the MIT license./
  *
- * Date: 2016-06-10T19:24Z
+ * Date: 2016-06-11T00:02Z
  */
 (function (factory) {
   /* global define */
@@ -4047,6 +4047,38 @@
     };
 
     /**
+     * setFontName
+     *
+     * @param {String} value - px
+     */
+    this.setFontName = function (value) {
+      var rng = this.createRange();
+
+      if (rng && rng.isCollapsed()) {
+        var spans = style.styleNodes(rng);
+        var firstSpan = list.head(spans);
+
+        $(spans).css({
+          'font-family': value
+        });
+
+        // [workaround] added styled bogus span for style
+        //  - also bogus character needed for cursor position
+        if (firstSpan && !dom.nodeLength(firstSpan)) {
+          firstSpan.innerHTML = dom.ZERO_WIDTH_NBSP_CHAR;
+          range.createFromNodeAfter(firstSpan.firstChild).select();
+          $editable.data(KEY_BOGUS, firstSpan);
+        }
+      } else {
+        beforeCommand();
+        $(style.styleNodes(rng)).css({
+          'font-family': value
+        });
+        afterCommand();
+      }
+    };
+
+    /**
      * insert horizontal rule
      */
     this.insertHorizontalRule = this.wrapCommand(function () {
@@ -4329,7 +4361,7 @@
   };
 
   $.summernote = $.extend($.summernote, {
-    version: '0.8.8',
+    version: '0.8.9',
     ui: ui,
 
     options: {
