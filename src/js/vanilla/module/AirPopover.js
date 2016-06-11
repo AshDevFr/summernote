@@ -37,6 +37,24 @@ define([
     };
 
     this.initialize = function () {
+      this.fontInstalledMap = {};
+    };
+
+    this.destroy = function () {
+      delete this.fontInstalledMap;
+    };
+
+    this.isFontInstalled = function (name) {
+      if (!self.fontInstalledMap.hasOwnProperty(name)) {
+        self.fontInstalledMap[name] = agent.isFontInstalled(name) ||
+          list.contains(options.fontNamesIgnoreCheck, name);
+      }
+
+      return self.fontInstalledMap[name];
+    };
+
+    this.getAvailablesFont = function () {
+      return options.fontNames.filter(self.isFontInstalled);
     };
 
     this.update = function () {
