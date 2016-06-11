@@ -502,6 +502,38 @@ define([
     };
 
     /**
+     * setFontName
+     *
+     * @param {String} value - px
+     */
+    this.setFontName = function (value) {
+      var rng = this.createRange();
+
+      if (rng && rng.isCollapsed()) {
+        var spans = style.styleNodes(rng);
+        var firstSpan = list.head(spans);
+
+        $(spans).css({
+          'font-family': value
+        });
+
+        // [workaround] added styled bogus span for style
+        //  - also bogus character needed for cursor position
+        if (firstSpan && !dom.nodeLength(firstSpan)) {
+          firstSpan.innerHTML = dom.ZERO_WIDTH_NBSP_CHAR;
+          range.createFromNodeAfter(firstSpan.firstChild).select();
+          $editable.data(KEY_BOGUS, firstSpan);
+        }
+      } else {
+        beforeCommand();
+        $(style.styleNodes(rng)).css({
+          'font-family': value
+        });
+        afterCommand();
+      }
+    };
+
+    /**
      * insert horizontal rule
      */
     this.insertHorizontalRule = this.wrapCommand(function () {
