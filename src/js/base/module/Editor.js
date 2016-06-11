@@ -504,7 +504,7 @@ define([
     /**
      * setFontName
      *
-     * @param {String} value - px
+     * @param {String} value
      */
     this.setFontName = function (value) {
       var rng = this.createRange();
@@ -528,6 +528,38 @@ define([
         beforeCommand();
         $(style.styleNodes(rng)).css({
           'font-family': value
+        });
+        afterCommand();
+      }
+    };
+
+    /**
+     * fontColor
+     *
+     * @param {String} value
+     */
+    this.fontColor = function (value) {
+      var rng = this.createRange();
+
+      if (rng && rng.isCollapsed()) {
+        var spans = style.styleNodes(rng);
+        var firstSpan = list.head(spans);
+
+        $(spans).css({
+          'color': value
+        });
+
+        // [workaround] added styled bogus span for style
+        //  - also bogus character needed for cursor position
+        if (firstSpan && !dom.nodeLength(firstSpan)) {
+          firstSpan.innerHTML = dom.ZERO_WIDTH_NBSP_CHAR;
+          range.createFromNodeAfter(firstSpan.firstChild).select();
+          $editable.data(KEY_BOGUS, firstSpan);
+        }
+      } else {
+        beforeCommand();
+        $(style.styleNodes(rng)).css({
+          'color': value
         });
         afterCommand();
       }
