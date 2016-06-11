@@ -42,7 +42,7 @@ define([
       var hint = hints[index];
       if (hint && hint.match.test(keyword) && hint.search) {
         var matches = hint.match.exec(keyword);
-        hint.search(matches[1], callback);
+        hint.search(keyword, matches[1], callback);
       } else {
         callback();
       }
