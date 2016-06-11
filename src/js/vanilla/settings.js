@@ -69,6 +69,12 @@ define([
         onImageUploadError: null
       },
 
+      fontNames: [
+        'Arial', 'Arial Black', 'Comic Sans MS', 'Courier New',
+        'Helvetica Neue', 'Helvetica', 'Impact', 'Lucida Grande',
+        'Tahoma', 'Times New Roman', 'Verdana'
+      ],
+
       keyMap: {
         pc: {
           'ENTER': 'insertParagraph',
