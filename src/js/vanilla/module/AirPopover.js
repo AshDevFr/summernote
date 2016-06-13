@@ -57,10 +57,11 @@ define([
       return options.fontNames.filter(self.isFontInstalled);
     };
 
-    this.update = function () {
+    this.update = function (force) {
       var styleInfo = context.invoke('editor.currentStyle');
-      if (styleInfo.range && !styleInfo.range.isCollapsed()) {
-        var rect = list.last(styleInfo.range.getClientRects());
+      if (styleInfo.range && (!styleInfo.range.isCollapsed() || force)) {
+        var rect = list.last(styleInfo.range.getClientRects()) ||
+          context.invoke('editor.createRange').getWordRange().getClientRects();
         if (rect) {
           var bnd = func.rect2bnd(rect);
           options.popover.air.update(styleInfo, bnd);
