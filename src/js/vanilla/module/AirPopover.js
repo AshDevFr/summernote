@@ -60,10 +60,14 @@ define([
     this.update = function (force) {
       var styleInfo = context.invoke('editor.currentStyle');
       if (styleInfo.range && (!styleInfo.range.isCollapsed() || force)) {
-        var rect = list.last(styleInfo.range.getClientRects()) ||
-          context.invoke('editor.createRange').getWordRange().getClientRects();
+        var rect = list.last(styleInfo.range.getClientRects());
+        var bnd;
         if (rect) {
-          var bnd = func.rect2bnd(rect);
+          bnd = func.rect2bnd(rect);
+          options.popover.air.update(styleInfo, bnd);
+        } else if (force) {
+          rect = context.invoke('editor.createRange').getWordRange().getClientRects();
+          bnd = func.rect2bnd(rect);
           options.popover.air.update(styleInfo, bnd);
         }
       } else {
