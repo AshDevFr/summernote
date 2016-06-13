@@ -1,5 +1,6 @@
-# Summernote
+# Winternote
 
+Based on Summernote  
 Super simple WYSIWYG Editor.
 
 [![Build Status](https://secure.travis-ci.org/AshDevFr/winternote.svg)](http://travis-ci.org/AshDevFr/winternote)
@@ -7,14 +8,14 @@ Super simple WYSIWYG Editor.
 [![Coverage Status](https://coveralls.io/repos/AshDevFr/winternote/badge.svg?branch=develop&service=github)](https://coveralls.io/github/AshDevFr/winternote?branch=develop)
 
 
-### Summernote
-Summernote is a JavaScript library that helps you create WYSIWYG editors online.
+### Winternote
+Winternote is a JavaScript library that helps you create WYSIWYG editors online.
 
 Home page: <http://summernote.org>
 
-### Why Summernote?
+### Why Winternote?
 
-Summernote has a few special features:
+Winternote has a few special features:
 
 * Paste images from clipboard
 * Saves images directly in the content of the field using base64 encoding, so you don't need to implement image handling at all
@@ -24,6 +25,7 @@ Summernote has a few special features:
 
 ### Installation and dependencies
 
+<<<<<<< 93a71f3a0f89e2f1480b13447a5a20bd3cd006c6
 Summernote uses opensource libraries: [jQuery](http://jquery.com/), [Bootstrap](http://getbootstrap.com).
 
 For [Meteor](http://github.com/meteor/meteor), just run `meteor add summernote:summernote`. More info in the [Meteor README](meteor/README.md).
@@ -32,6 +34,9 @@ Also there's an adaptation for React: [react-summernote](https://github.com/Vnki
 
 
 For other/no frameworks:
+=======
+Winternote uses opensource libraries: [jQuery](http://jquery.com/).
+>>>>>>> doc: Update README
 
 #### 1. include JS/CSS
 
@@ -40,8 +45,6 @@ Include the following code in the `<head>` tag of your HTML:
 ```html
 <!-- include libraries(jQuery, bootstrap) -->
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script> 
-<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/css/bootstrap.min.css" />
-<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/js/bootstrap.min.js"></script>
 
 <!-- include summernote css/js-->
 <link href="summernote.css" rel="stylesheet">
@@ -140,16 +143,16 @@ grunt server
 
 #### Coding convention
 * JSHint: http://www.jshint.com/about/
-* JSHint rule: https://github.com/summernote/summernote/blob/master/.jshintrc
+* JSHint rule: https://github.com/AshDevFr/winternote/blob/master/.jshintrc
 
 #### Contribution guide
-* Please read [CONTRIBUTING.md](https://github.com/summernote/summernote/blob/develop/CONTRIBUTING.md) before sending pull requests.
+* Please read [CONTRIBUTING.md](https://github.com/AshDevFr/winternote/blob/develop/CONTRIBUTING.md) before sending pull requests.
 
 ### Contacts
 * Email: susukang98@gmail.com
 * Twitter: http://twitter.com/hackerwins
 * Chat with us:
-[![Join the chat at https://gitter.im/summernote/summernote](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/summernote/summernote?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Join the chat at https://gitter.im/AshDevFr/winternote](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/AshDevFr/winternote?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 ### License
 summernote may be freely distributed under the MIT license.
