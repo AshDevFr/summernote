@@ -1,12 +1,12 @@
 /**
- * Super simple wysiwyg editor v0.8.12
+ * Super simple wysiwyg editor v0.8.13
  * http://summernote.org/
  *
  * summernote.js
  * Copyright 2013-2016 Alan Hong. and other contributors
  * summernote may be freely distributed under the MIT license./
  *
- * Date: 2016-06-13T23:55Z
+ * Date: 2016-08-17T08:26Z
  */
 (function (factory) {
   /* global define */
@@ -140,6 +140,35 @@
       }).join('');
     };
 
+    /**
+     * Returns a function, that, as long as it continues to be invoked, will not
+     * be triggered. The function will be called after it stops being called for
+     * N milliseconds. If `immediate` is passed, trigger the function on the
+     * leading edge, instead of the trailing.
+     * @param {Function} func
+     * @param {Number} wait
+     * @param {Boolean} immediate
+     * @return {Function}
+     */
+    var debounce = function (func, wait, immediate) {
+      var timeout;
+      return function () {
+        var context = this, args = arguments;
+        var later = function () {
+          timeout = null;
+          if (!immediate) {
+            func.apply(context, args);
+          }
+        };
+        var callNow = immediate && !timeout;
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+        if (callNow) {
+          func.apply(context, args);
+        }
+      };
+    };
+
     return {
       eq: eq,
       eq2: eq2,
@@ -153,7 +182,8 @@
       uniqueId: uniqueId,
       rect2bnd: rect2bnd,
       invertObject: invertObject,
-      namespaceToCamel: namespaceToCamel
+      namespaceToCamel: namespaceToCamel,
+      debounce: debounce
     };
   })();
 
@@ -294,7 +324,7 @@
     };
   
     /**
-     * returns a copy of the array with all falsy values removed
+     * returns a copy of the array with all false values removed
      *
      * @param {Array} array - array
      * @param {Function} fn - predicate function for cluster rule
@@ -3645,9 +3675,9 @@
       // [workaround] IE doesn't have input events for contentEditable
       // - see: https://goo.gl/4bfIvA
       var changeEventName = agent.isMSIE ? 'DOMCharacterDataModified DOMSubtreeModified DOMNodeInserted' : 'input';
-      $editable.on(changeEventName, function () {
+      $editable.on(changeEventName, func.debounce(function () {
         context.triggerEvent('change', $editable.html());
-      });
+      }, 250));
 
       $editor.on('focusin', function (event) {
         context.triggerEvent('focusin', event);
@@ -4498,6 +4528,7 @@
     var $editable = context.layoutInfo.editable;
     var options = context.options;
     var lang = options.langInfo;
+    var documentEventHandlers = {};
 
     var $dropzone = $([
       '<div class="note-dropzone">',
@@ -4505,15 +4536,23 @@
       '</div>'
     ].join('')).prependTo($editor);
 
+    var detachDocumentEvent = function () {
+      Object.keys(documentEventHandlers).forEach(function (key) {
+        $document.off(key.substr(2).toLowerCase(), documentEventHandlers[key]);
+      });
+      documentEventHandlers = {};
+    };
+
     /**
      * attach Drag and Drop Events
      */
     this.initialize = function () {
       if (options.disableDragAndDrop) {
         // prevent default drop event
-        $document.on('drop', function (e) {
+        documentEventHandlers.onDrop = function (e) {
           e.preventDefault();
-        });
+        };
+        $document.on('drop', documentEventHandlers.onDrop);
       } else {
         this.attachDragAndDropEvent();
       }
@@ -4526,9 +4565,7 @@
       var collection = $(),
           $dropzoneMessage = $dropzone.find('.note-dropzone-message');
 
-      // show dropzone on dragenter when dragging a object to document
-      // -but only if the editor is visible, i.e. has a positive width and height
-      $document.on('dragenter', function (e) {
+      documentEventHandlers.onDragenter = function (e) {
         var isCodeview = context.invoke('codeview.isActivated');
         var hasEditorSize = $editor.width() > 0 && $editor.height() > 0;
         if (!isCodeview && !collection.length && hasEditorSize) {
@@ -4538,15 +4575,25 @@
           $dropzoneMessage.text(lang.image.dragImageHere);
         }
         collection = collection.add(e.target);
-      }).on('dragleave', function (e) {
+      };
+
+      documentEventHandlers.onDragleave = function (e) {
         collection = collection.not(e.target);
         if (!collection.length) {
           $editor.removeClass('dragover');
         }
-      }).on('drop', function () {
+      };
+
+      documentEventHandlers.onDrop = function () {
         collection = $();
         $editor.removeClass('dragover');
-      });
+      };
+
+      // show dropzone on dragenter when dragging a object to document
+      // -but only if the editor is visible, i.e. has a positive width and height
+      $document.on('dragenter', documentEventHandlers.onDragenter)
+        .on('dragleave', documentEventHandlers.onDragleave)
+        .on('drop', documentEventHandlers.onDrop);
 
       // change dropzone's message on hover.
       $dropzone.on('dragenter', function () {
@@ -4579,6 +4626,10 @@
           });
         }
       }).on('dragover', false); // prevent default dragover event
+    };
+
+    this.destroy = function () {
+      detachDocumentEvent();
     };
   };
 
@@ -5170,7 +5221,7 @@
   };
 
   $.summernote = $.extend($.summernote, {
-    version: '0.8.12',
+    version: '0.8.13',
     ui: ui,
     dom: dom,
 
