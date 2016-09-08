@@ -1,12 +1,12 @@
 /**
- * Super simple wysiwyg editor v0.8.13
+ * Super simple wysiwyg editor v0.8.14
  * http://summernote.org/
  *
  * summernote.js
  * Copyright 2013-2016 Alan Hong. and other contributors
  * summernote may be freely distributed under the MIT license./
  *
- * Date: 2016-08-17T08:26Z
+ * Date: 2016-09-08T00:07Z
  */
 (function (factory) {
   /* global define */
@@ -6525,7 +6525,7 @@
 
       var body = [
         '<p class="text-center">',
-        '<a href="http://summernote.org/" target="_blank">Summernote 0.8.13</a> · ',
+        '<a href="http://summernote.org/" target="_blank">Summernote 0.8.14</a> · ',
         '<a href="https://github.com/summernote/summernote" target="_blank">Project</a> · ',
         '<a href="https://github.com/summernote/summernote/issues" target="_blank">Issues</a>',
         '</p>'
@@ -6870,7 +6870,7 @@
 
 
   $.summernote = $.extend($.summernote, {
-    version: '0.8.13',
+    version: '0.8.14',
     ui: ui,
     dom: dom,
 

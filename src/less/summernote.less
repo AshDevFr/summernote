@@ -145,6 +145,41 @@
   }
 }
 
+/* AirEditor mode layout
+------------------------------------------*/
+.note-editor.note-aireditor {
+
+  /* codeview mode */
+  &.codeview {
+    .note-editing-area {
+      .note-editable {
+        display: none;
+      }
+      .note-codable {
+        display: block;
+      }
+    }
+  }
+
+  .note-editing-area {
+    /* codeable */
+    .note-codable {
+      display: none;
+      width: 100%;
+      border: none;
+      box-shadow: none;
+      font-family: Menlo, Monaco, monospace, sans-serif;
+      font-size: 14px;
+      resize: none;
+
+      /* override BS2 default style */
+      .box-sizing(border-box);
+      .rounded(0);
+      margin-bottom: 0;
+    }
+  }
+}
+
 /* Popover
 ------------------------------------------*/
 .note-popover.popover {

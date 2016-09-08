@@ -1,12 +1,12 @@
 /**
- * Super simple wysiwyg editor v0.8.13
+ * Super simple wysiwyg editor v0.8.14
  * http://summernote.org/
  *
  * summernote.js
  * Copyright 2013-2016 Alan Hong. and other contributors
  * summernote may be freely distributed under the MIT license./
  *
- * Date: 2016-08-17T08:26Z
+ * Date: 2016-09-08T00:07Z
  */
 (function (factory) {
   /* global define */
@@ -1864,7 +1864,7 @@
     editable: renderer.create('<div class="note-editable" contentEditable="true">'),
     buttonGroup: renderer.create('<span class="note-btn-group">'),
     button: renderer.create('<button class="note-btn">'),
-    airEditor: renderer.create('<div class="note-editor"/>'),
+    airEditor: renderer.create('<div class="note-editor note-aireditor"/>'),
     airEditable: renderer.create('<div class="note-editable" contentEditable="true"/>'),
     statusbar: renderer.create([
       '<div class="note-statusbar">',
@@ -1879,6 +1879,7 @@
     createLayout: function ($note, options) {
       var $editor = (options.airMode ? ui.airEditor([
         ui.editingArea([
+          ui.codable(),
           ui.airEditable()
         ])
       ]) : ui.editor([
@@ -5221,7 +5222,7 @@
   };
 
   $.summernote = $.extend($.summernote, {
-    version: '0.8.13',
+    version: '0.8.14',
     ui: ui,
     dom: dom,
 

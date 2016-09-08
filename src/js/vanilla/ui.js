@@ -9,7 +9,7 @@ define([
     editable: renderer.create('<div class="note-editable" contentEditable="true">'),
     buttonGroup: renderer.create('<span class="note-btn-group">'),
     button: renderer.create('<button class="note-btn">'),
-    airEditor: renderer.create('<div class="note-editor"/>'),
+    airEditor: renderer.create('<div class="note-editor note-aireditor"/>'),
     airEditable: renderer.create('<div class="note-editable" contentEditable="true"/>'),
     statusbar: renderer.create([
       '<div class="note-statusbar">',
@@ -24,6 +24,7 @@ define([
     createLayout: function ($note, options) {
       var $editor = (options.airMode ? ui.airEditor([
         ui.editingArea([
+          ui.codable(),
           ui.airEditable()
         ])
       ]) : ui.editor([
