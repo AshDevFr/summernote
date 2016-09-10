@@ -66,9 +66,7 @@ define([
           bnd = func.rect2bnd(rect);
           options.popover.air.update(styleInfo, bnd);
         } else if (force) {
-          rect = context.invoke('editor.createRange').getWordRange().getClientRects();
-          bnd = func.rect2bnd(rect);
-          options.popover.air.update(styleInfo, bnd);
+          options.popover.air.update(styleInfo, null);
         }
       } else {
         this.hide();
