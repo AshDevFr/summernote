@@ -1,10 +1,14 @@
 define([
   'summernote/base/core/agent',
   'summernote/base/core/func',
-  'summernote/base/core/list'
-], function (agent, func, list) {
+  'summernote/base/core/list',
+  'summernote/base/core/range'
+], function (agent, func, list, range) {
   var AirPopover = function (context) {
     var self = this;
+
+    var $editable = context.layoutInfo.editable;
+    var editable = $editable[0];
 
     var options = context.options;
 
@@ -25,6 +29,8 @@ define([
         if (!e.relatedTarget) {
           self.hide();
         }
+
+        self.lastRange = range.createFromSelection();
       }
     };
 
@@ -55,6 +61,22 @@ define([
 
     this.getAvailablesFont = function () {
       return options.fontNames.filter(self.isFontInstalled);
+    };
+
+    this.getLastRange = function () {
+      return self.lastRange;
+    };
+
+    this.insertNode = function (node, rng) {
+      if (!$editable.is(':focus')) {
+        $editable.focus();
+        rng = rng || self.lastRange || range.create(editable);
+        rng.insertNode(node);
+        self.lastRange = range.createFromNodeAfter(node);
+        self.lastRange.select();
+      } else {
+        context.invoke('editor.insertNode', node);
+      }
     };
 
     this.update = function (force) {
