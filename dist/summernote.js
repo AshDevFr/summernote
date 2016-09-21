@@ -1,12 +1,12 @@
 /**
- * Super simple wysiwyg editor v0.8.15
+ * Super simple wysiwyg editor v0.8.16
  * http://summernote.org/
  *
  * summernote.js
  * Copyright 2013-2016 Alan Hong. and other contributors
  * summernote may be freely distributed under the MIT license./
  *
- * Date: 2016-09-10T01:00Z
+ * Date: 2016-09-21T00:50Z
  */
 (function (factory) {
   /* global define */
@@ -5153,6 +5153,7 @@
     var self = this;
 
     var hint = context.options.hint || [];
+    var noHintCallback = context.options.noHintCallback || null;
     var hints = $.isArray(hint) ? hint : [hint];
 
     this.events = {
@@ -5201,8 +5202,9 @@
 
     this.handleKeyup = function (e) {
       if (!list.contains([key.code.ENTER, key.code.UP, key.code.DOWN], e.keyCode)) {
-        var wordRange = context.invoke('editor.createRange').getWordRange();
-        var keyword = wordRange.toString();
+        var hintMatch = false,
+          wordRange = context.invoke('editor.createRange').getWordRange(),
+          keyword = wordRange.toString();
         if (hints.length && keyword) {
           var bnd = func.rect2bnd(list.last(wordRange.getClientRects()));
           if (bnd) {
@@ -5210,17 +5212,22 @@
 
             hints.forEach(function (hint, idx) {
               if (typeof hint.callback === 'function' && hint.match.test(keyword)) {
+                hintMatch = true;
                 self.getResult(idx, keyword, hint.callback, bnd);
               }
             });
           }
+        }
+
+        if (typeof noHintCallback === 'function' && !hintMatch) {
+          noHintCallback(null);
         }
       }
     };
   };
 
   $.summernote = $.extend($.summernote, {
-    version: '0.8.15',
+    version: '0.8.16',
     ui: ui,
     dom: dom,
 
