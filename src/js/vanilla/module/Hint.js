@@ -9,6 +9,7 @@ define([
     var self = this;
 
     var hint = context.options.hint || [];
+    var noHintCallback = context.options.noHintCallback || null;
     var hints = $.isArray(hint) ? hint : [hint];
 
     this.events = {
@@ -57,8 +58,9 @@ define([
 
     this.handleKeyup = function (e) {
       if (!list.contains([key.code.ENTER, key.code.UP, key.code.DOWN], e.keyCode)) {
-        var wordRange = context.invoke('editor.createRange').getWordRange();
-        var keyword = wordRange.toString();
+        var hintMatch = false,
+          wordRange = context.invoke('editor.createRange').getWordRange(),
+          keyword = wordRange.toString();
         if (hints.length && keyword) {
           var bnd = func.rect2bnd(list.last(wordRange.getClientRects()));
           if (bnd) {
@@ -66,10 +68,15 @@ define([
 
             hints.forEach(function (hint, idx) {
               if (typeof hint.callback === 'function' && hint.match.test(keyword)) {
+                hintMatch = true;
                 self.getResult(idx, keyword, hint.callback, bnd);
               }
             });
           }
+        }
+
+        if (typeof noHintCallback === 'function' && !hintMatch) {
+          noHintCallback(null);
         }
       }
     };
