@@ -1,12 +1,12 @@
 /**
- * Super simple wysiwyg editor v0.8.17
+ * Super simple wysiwyg editor v0.8.18
  * http://summernote.org/
  *
  * summernote.js
  * Copyright 2013-2016 Alan Hong. and other contributors
  * summernote may be freely distributed under the MIT license./
  *
- * Date: 2016-09-21T21:02Z
+ * Date: 2016-09-22T20:55Z
  */
 (function (factory) {
   /* global define */
@@ -5091,11 +5091,6 @@
     var linkPattern = /^([A-Za-z][A-Za-z0-9+-.]*\:[\/\/]?|mailto:[A-Z0-9._%+-]+@)?(www\.)?(.+)$/i;
 
     this.events = {
-      'summernote.keyup': function (we, e) {
-        if (!e.isDefaultPrevented()) {
-          self.handleKeyup(e);
-        }
-      },
       'summernote.keydown': function (we, e) {
         self.handleKeydown(e);
       }
@@ -5122,6 +5117,8 @@
         var node = $('<a />').html(keyword).attr('href', link)[0];
 
         this.lastWordRange.insertNode(node);
+        range.createFromNode(node).collapse().select();
+
         this.lastWordRange = null;
         context.invoke('editor.focus');
       }
@@ -5132,11 +5129,6 @@
       if (list.contains([key.code.ENTER, key.code.SPACE], e.keyCode)) {
         var wordRange = context.invoke('editor.createRange').getWordRange();
         this.lastWordRange = wordRange;
-      }
-    };
-
-    this.handleKeyup = function (e) {
-      if (list.contains([key.code.ENTER, key.code.SPACE], e.keyCode)) {
         this.replace();
       }
     };
@@ -6525,7 +6517,7 @@
 
       var body = [
         '<p class="text-center">',
-        '<a href="http://summernote.org/" target="_blank">Summernote 0.8.17</a> · ',
+        '<a href="http://summernote.org/" target="_blank">Summernote 0.8.18</a> · ',
         '<a href="https://github.com/summernote/summernote" target="_blank">Project</a> · ',
         '<a href="https://github.com/summernote/summernote/issues" target="_blank">Issues</a>',
         '</p>'
@@ -6870,7 +6862,7 @@
 
 
   $.summernote = $.extend($.summernote, {
-    version: '0.8.17',
+    version: '0.8.18',
     ui: ui,
     dom: dom,
 
