@@ -11,11 +11,6 @@ define([
     var linkPattern = /^([A-Za-z][A-Za-z0-9+-.]*\:[\/\/]?|mailto:[A-Z0-9._%+-]+@)?(www\.)?(.+)$/i;
 
     this.events = {
-      'summernote.keyup': function (we, e) {
-        if (!e.isDefaultPrevented()) {
-          self.handleKeyup(e);
-        }
-      },
       'summernote.keydown': function (we, e) {
         self.handleKeydown(e);
       }
@@ -42,6 +37,8 @@ define([
         var node = $('<a />').html(keyword).attr('href', link)[0];
 
         this.lastWordRange.insertNode(node);
+        range.createFromNode(node).collapse().select();
+
         this.lastWordRange = null;
         context.invoke('editor.focus');
       }
@@ -52,11 +49,6 @@ define([
       if (list.contains([key.code.ENTER, key.code.SPACE], e.keyCode)) {
         var wordRange = context.invoke('editor.createRange').getWordRange();
         this.lastWordRange = wordRange;
-      }
-    };
-
-    this.handleKeyup = function (e) {
-      if (list.contains([key.code.ENTER, key.code.SPACE], e.keyCode)) {
         this.replace();
       }
     };
