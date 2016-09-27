@@ -1,6 +1,7 @@
 define([
-  'summernote/base/core/dom'
-], function (dom) {
+  'summernote/base/core/dom',
+  'summernote/base/core/range'
+], function (dom, range) {
   var Handle = function (context) {
     var self = this;
 
@@ -76,6 +77,8 @@ define([
 
       if (isImage) {
         var $image = $(target);
+        range.createFromNode(target).select();
+
         var pos = $image.position();
 
         // include margin
