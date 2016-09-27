@@ -1,12 +1,12 @@
 /**
- * Super simple wysiwyg editor v0.8.18
+ * Super simple wysiwyg editor v0.8.19
  * http://summernote.org/
  *
  * summernote.js
  * Copyright 2013-2016 Alan Hong. and other contributors
  * summernote may be freely distributed under the MIT license./
  *
- * Date: 2016-09-22T20:55Z
+ * Date: 2016-09-27T21:43Z
  */
 (function (factory) {
   /* global define */
@@ -5048,6 +5048,8 @@
 
       if (isImage) {
         var $image = $(target);
+        range.createFromNode(target).select();
+
         var pos = $image.position();
 
         // include margin
@@ -6517,7 +6519,7 @@
 
       var body = [
         '<p class="text-center">',
-        '<a href="http://summernote.org/" target="_blank">Summernote 0.8.18</a> · ',
+        '<a href="http://summernote.org/" target="_blank">Summernote 0.8.19</a> · ',
         '<a href="https://github.com/summernote/summernote" target="_blank">Project</a> · ',
         '<a href="https://github.com/summernote/summernote/issues" target="_blank">Issues</a>',
         '</p>'
@@ -6862,7 +6864,7 @@
 
 
   $.summernote = $.extend($.summernote, {
-    version: '0.8.18',
+    version: '0.8.19',
     ui: ui,
     dom: dom,
 
