@@ -7,6 +7,7 @@ define([
   var AirPopover = function (context) {
     var self = this;
 
+    var $document = $(document);
     var $editable = context.layoutInfo.editable;
     var editable = $editable[0];
 
@@ -33,6 +34,12 @@ define([
         self.lastRange = range.createFromSelection();
       }
     };
+
+    $editable.on('mousedown', function () {
+      $document.on('mouseup', function () {
+        self.update();
+      });
+    });
 
     this.shouldInitialize = function () {
       return options.airMode &&
