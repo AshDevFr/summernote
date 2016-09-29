@@ -1,12 +1,12 @@
 /**
- * Super simple wysiwyg editor v0.8.20
+ * Super simple wysiwyg editor v0.8.21
  * http://summernote.org/
  *
  * summernote.js
  * Copyright 2013-2016 Alan Hong. and other contributors
  * summernote may be freely distributed under the MIT license./
  *
- * Date: 2016-09-28T20:33Z
+ * Date: 2016-09-29T00:08Z
  */
 (function (factory) {
   /* global define */
@@ -5077,8 +5077,11 @@
 
     var options = context.options;
 
+    var innerMouseUp;
+
     this.events = {
       'summernote.keyup summernote.mouseup summernote.scroll': function () {
+        innerMouseUp = true;
         self.update();
       },
       'summernote.change summernote.dialog.shown': function () {
@@ -5101,7 +5104,12 @@
 
     $editable.on('mousedown', function () {
       $document.on('mouseup', function () {
-        self.update();
+        if (!innerMouseUp) {
+          self.update();
+        }
+
+        innerMouseUp = false;
+        $document.off('mouseup');
       });
     });
 
@@ -5249,7 +5257,7 @@
   };
 
   $.summernote = $.extend($.summernote, {
-    version: '0.8.20',
+    version: '0.8.21',
     ui: ui,
     dom: dom,
 
