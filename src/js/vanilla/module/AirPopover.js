@@ -13,8 +13,11 @@ define([
 
     var options = context.options;
 
+    var innerMouseUp;
+
     this.events = {
       'summernote.keyup summernote.mouseup summernote.scroll': function () {
+        innerMouseUp = true;
         self.update();
       },
       'summernote.change summernote.dialog.shown': function () {
@@ -37,7 +40,12 @@ define([
 
     $editable.on('mousedown', function () {
       $document.on('mouseup', function () {
-        self.update();
+        if (!innerMouseUp) {
+          self.update();
+        }
+
+        innerMouseUp = false;
+        $document.off('mouseup');
       });
     });
 
