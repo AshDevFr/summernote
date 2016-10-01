@@ -94,6 +94,12 @@ define([
       }
     };
 
+    this.moveCursorToEnd = function () {
+      if (editable.lastElementChild) {
+        range.createFromNode(editable.lastElementChild).select();
+      }
+    };
+
     this.update = function (force) {
       var styleInfo = context.invoke('editor.currentStyle');
       if (styleInfo.range && (!styleInfo.range.isCollapsed() || force)) {
