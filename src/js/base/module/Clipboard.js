@@ -59,19 +59,21 @@ define([
       var node = this.$paste[0].firstChild;
 
       if (dom.isImg(node)) {
-        var dataURI = node.src;
-        var decodedData = atob(dataURI.split(',')[1]);
-        var array = new Uint8Array(decodedData.length);
-        for (var i = 0; i < decodedData.length; i++) {
-          array[i] = decodedData.charCodeAt(i);
+        if (/$data\:/.exec(node.src)) {
+          var dataURI = node.src;
+          var decodedData = atob(dataURI.split(',')[1]);
+          var array = new Uint8Array(decodedData.length);
+          for (var i = 0; i < decodedData.length; i++) {
+            array[i] = decodedData.charCodeAt(i);
+          }
+
+          var blob = new Blob([array], { type: 'image/png' });
+          blob.name = 'clipboard.png';
+
+          context.invoke('editor.restoreRange');
+          context.invoke('editor.focus');
+          context.invoke('editor.insertImagesOrCallback', [blob]);
         }
-
-        var blob = new Blob([array], { type: 'image/png' });
-        blob.name = 'clipboard.png';
-
-        context.invoke('editor.restoreRange');
-        context.invoke('editor.focus');
-        context.invoke('editor.insertImagesOrCallback', [blob]);
       } else {
         var pasteContent = $('<div />').html(this.$paste.html()).html();
         context.invoke('editor.restoreRange');
