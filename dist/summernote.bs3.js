@@ -1,12 +1,12 @@
 /**
- * Super simple wysiwyg editor v0.8.22
+ * Super simple wysiwyg editor v0.8.23
  * http://summernote.org/
  *
  * summernote.js
  * Copyright 2013-2016 Alan Hong. and other contributors
  * summernote may be freely distributed under the MIT license./
  *
- * Date: 2016-10-01T00:18Z
+ * Date: 2016-10-03T22:16Z
  */
 (function (factory) {
   /* global define */
@@ -4622,19 +4622,21 @@
       var node = this.$paste[0].firstChild;
 
       if (dom.isImg(node)) {
-        var dataURI = node.src;
-        var decodedData = atob(dataURI.split(',')[1]);
-        var array = new Uint8Array(decodedData.length);
-        for (var i = 0; i < decodedData.length; i++) {
-          array[i] = decodedData.charCodeAt(i);
+        if (/$data\:/.exec(node.src)) {
+          var dataURI = node.src;
+          var decodedData = atob(dataURI.split(',')[1]);
+          var array = new Uint8Array(decodedData.length);
+          for (var i = 0; i < decodedData.length; i++) {
+            array[i] = decodedData.charCodeAt(i);
+          }
+
+          var blob = new Blob([array], { type: 'image/png' });
+          blob.name = 'clipboard.png';
+
+          context.invoke('editor.restoreRange');
+          context.invoke('editor.focus');
+          context.invoke('editor.insertImagesOrCallback', [blob]);
         }
-
-        var blob = new Blob([array], { type: 'image/png' });
-        blob.name = 'clipboard.png';
-
-        context.invoke('editor.restoreRange');
-        context.invoke('editor.focus');
-        context.invoke('editor.insertImagesOrCallback', [blob]);
       } else {
         var pasteContent = $('<div />').html(this.$paste.html()).html();
         context.invoke('editor.restoreRange');
@@ -6519,7 +6521,7 @@
 
       var body = [
         '<p class="text-center">',
-        '<a href="http://summernote.org/" target="_blank">Summernote 0.8.22</a> · ',
+        '<a href="http://summernote.org/" target="_blank">Summernote 0.8.23</a> · ',
         '<a href="https://github.com/summernote/summernote" target="_blank">Project</a> · ',
         '<a href="https://github.com/summernote/summernote/issues" target="_blank">Issues</a>',
         '</p>'
@@ -6864,7 +6866,7 @@
 
 
   $.summernote = $.extend($.summernote, {
-    version: '0.8.22',
+    version: '0.8.23',
     ui: ui,
     dom: dom,
 
