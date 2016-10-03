@@ -95,8 +95,8 @@ define([
     };
 
     this.moveCursorToEnd = function () {
-      if (editable.lastElementChild) {
-        range.createFromNode(editable.lastElementChild).select();
+      if (editable.lastChild || editable.lastElementChild) {
+        range.createFromNodeAfter(editable.lastChild || editable.lastElementChild).select();
       }
     };
 
