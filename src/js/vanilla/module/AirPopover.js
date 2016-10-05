@@ -1,9 +1,10 @@
 define([
   'summernote/base/core/agent',
+  'summernote/base/core/dom',
   'summernote/base/core/func',
   'summernote/base/core/list',
   'summernote/base/core/range'
-], function (agent, func, list, range) {
+], function (agent, dom, func, list, range) {
   var AirPopover = function (context) {
     var self = this;
 
@@ -82,16 +83,21 @@ define([
       return self.lastRange;
     };
 
-    this.insertNode = function (node, rng) {
+    this.insertNode = function (node, rng, forceInline) {
       if (!$editable.is(':focus')) {
         $editable.focus();
-        rng = rng || self.lastRange || range.create(editable);
-        rng.insertNode(node);
-        self.lastRange = range.createFromNodeAfter(node);
-        self.lastRange.select();
-      } else {
-        context.invoke('editor.insertNode', node);
       }
+      rng = rng || self.lastRange || range.create(editable);
+      var info = dom.splitPoint(rng.getStartPoint(), forceInline || dom.isInline(node));
+
+      if (info.rightNode) {
+        info.rightNode.parentNode.insertBefore(node, info.rightNode);
+      } else {
+        info.container.appendChild(node);
+      }
+
+      self.lastRange = range.createFromNodeAfter(node);
+      self.lastRange.select();
     };
 
     this.moveCursorToEnd = function () {
