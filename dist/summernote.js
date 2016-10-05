@@ -1,12 +1,12 @@
 /**
- * Super simple wysiwyg editor v0.8.24
+ * Super simple wysiwyg editor v0.8.25
  * http://summernote.org/
  *
  * summernote.js
  * Copyright 2013-2016 Alan Hong. and other contributors
  * summernote may be freely distributed under the MIT license./
  *
- * Date: 2016-10-03T23:19Z
+ * Date: 2016-10-05T18:20Z
  */
 (function (factory) {
   /* global define */
@@ -4902,11 +4902,12 @@
 
     this.update = function (target) {
       var isImage = dom.isImg(target);
+      var isResizable = !$(target).attr('disable-resize');
       var $selection = this.$handle.find('.note-control-selection');
 
       context.invoke('imagePopover.update', target);
 
-      if (isImage) {
+      if (isImage && isResizable) {
         var $image = $(target);
         range.createFromNode(target).select();
 
@@ -5265,7 +5266,7 @@
   };
 
   $.summernote = $.extend($.summernote, {
-    version: '0.8.24',
+    version: '0.8.25',
     ui: ui,
     dom: dom,
 
