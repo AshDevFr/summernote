@@ -106,6 +106,29 @@ define([
       }
     };
 
+    this.pasteHTML = function (markup, rng) {
+      if (!$editable.is(':focus')) {
+        $editable.focus();
+      }
+      rng = rng || self.lastRange || range.create(editable);
+      var info = dom.splitPoint(rng.getStartPoint(), false);
+
+      var contentsContainer = $('<div></div>').html(markup)[0];
+      var childNodes = list.from(contentsContainer.childNodes);
+
+      var contents = childNodes.map(function (childNode) {
+        if (info.rightNode) {
+          info.rightNode.parentNode.insertBefore(childNode, info.rightNode);
+        } else {
+          info.container.appendChild(childNode);
+        }
+        return childNode;
+      });
+
+      self.lastRange = range.createFromNodeAfter(list.last(contents));
+      self.lastRange.select();
+    };
+
     this.update = function (force) {
       var styleInfo = context.invoke('editor.currentStyle');
       if (styleInfo.range && (!styleInfo.range.isCollapsed() || force)) {
