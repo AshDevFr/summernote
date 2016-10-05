@@ -71,11 +71,12 @@ define([
 
     this.update = function (target) {
       var isImage = dom.isImg(target);
+      var isResizable = !$(target).attr('disable-resize');
       var $selection = this.$handle.find('.note-control-selection');
 
       context.invoke('imagePopover.update', target);
 
-      if (isImage) {
+      if (isImage && isResizable) {
         var $image = $(target);
         range.createFromNode(target).select();
 
