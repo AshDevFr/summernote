@@ -1,12 +1,12 @@
 /**
- * Super simple wysiwyg editor v0.8.25
+ * Super simple wysiwyg editor v0.8.26
  * http://summernote.org/
  *
  * summernote.js
  * Copyright 2013-2016 Alan Hong. and other contributors
  * summernote may be freely distributed under the MIT license./
  *
- * Date: 2016-10-05T18:20Z
+ * Date: 2016-10-05T20:54Z
  */
 (function (factory) {
   /* global define */
@@ -5149,16 +5149,21 @@
       return self.lastRange;
     };
 
-    this.insertNode = function (node, rng) {
+    this.insertNode = function (node, rng, forceInline) {
       if (!$editable.is(':focus')) {
         $editable.focus();
-        rng = rng || self.lastRange || range.create(editable);
-        rng.insertNode(node);
-        self.lastRange = range.createFromNodeAfter(node);
-        self.lastRange.select();
-      } else {
-        context.invoke('editor.insertNode', node);
       }
+      rng = rng || self.lastRange || range.create(editable);
+      var info = dom.splitPoint(rng.getStartPoint(), forceInline || dom.isInline(node));
+
+      if (info.rightNode) {
+        info.rightNode.parentNode.insertBefore(node, info.rightNode);
+      } else {
+        info.container.appendChild(node);
+      }
+
+      self.lastRange = range.createFromNodeAfter(node);
+      self.lastRange.select();
     };
 
     this.moveCursorToEnd = function () {
@@ -5266,7 +5271,7 @@
   };
 
   $.summernote = $.extend($.summernote, {
-    version: '0.8.25',
+    version: '0.8.26',
     ui: ui,
     dom: dom,
 
