@@ -1,12 +1,12 @@
 /**
- * Super simple wysiwyg editor v0.8.29
+ * Super simple wysiwyg editor v0.8.30
  * http://summernote.org/
  *
  * summernote.js
  * Copyright 2013-2016 Alan Hong. and other contributors
  * summernote may be freely distributed under the MIT license./
  *
- * Date: 2016-10-06T17:57Z
+ * Date: 2016-10-06T22:36Z
  */
 (function (factory) {
   /* global define */
@@ -5091,6 +5091,9 @@
         self.update();
       },
       'summernote.focusout': function (we, e) {
+        var currentRange = range.createFromSelection();
+        self.lastRange = currentRange ? currentRange : self.lastRange;
+
         // [workaround] Firefox doesn't support relatedTarget on focusout
         //  - Ignore hide action on focus out in FF.
         if (agent.isFF) {
@@ -5100,8 +5103,6 @@
         if (!e.relatedTarget) {
           self.hide();
         }
-
-        self.lastRange = range.createFromSelection();
       }
     };
 
@@ -5296,7 +5297,7 @@
   };
 
   $.summernote = $.extend($.summernote, {
-    version: '0.8.29',
+    version: '0.8.30',
     ui: ui,
     dom: dom,
 
