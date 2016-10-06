@@ -25,6 +25,9 @@ define([
         self.update();
       },
       'summernote.focusout': function (we, e) {
+        var currentRange = range.createFromSelection();
+        self.lastRange = currentRange ? currentRange : self.lastRange;
+
         // [workaround] Firefox doesn't support relatedTarget on focusout
         //  - Ignore hide action on focus out in FF.
         if (agent.isFF) {
@@ -34,8 +37,6 @@ define([
         if (!e.relatedTarget) {
           self.hide();
         }
-
-        self.lastRange = range.createFromSelection();
       }
     };
 
