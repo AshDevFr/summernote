@@ -1,12 +1,12 @@
 /**
- * Super simple wysiwyg editor v0.8.30
+ * Super simple wysiwyg editor v0.8.31
  * http://summernote.org/
  *
  * summernote.js
  * Copyright 2013-2016 Alan Hong. and other contributors
  * summernote may be freely distributed under the MIT license./
  *
- * Date: 2016-10-06T22:36Z
+ * Date: 2016-10-06T23:46Z
  */
 (function (factory) {
   /* global define */
@@ -5160,7 +5160,11 @@
       if (info.rightNode) {
         info.rightNode.parentNode.insertBefore(node, info.rightNode);
       } else {
-        info.container.appendChild(node);
+        if (self.isAncestor(editable, info.container)) {
+          editable.appendChild(node);
+        } else {
+          info.container.appendChild(node);
+        }
       }
 
       self.lastRange = range.createFromNodeAfter(node);
@@ -5188,7 +5192,11 @@
           if (info.rightNode) {
             info.rightNode.parentNode.insertBefore(childNode, info.rightNode);
           } else {
-            info.container.appendChild(childNode);
+            if (self.isAncestor(editable, info.container)) {
+              editable.appendChild(childNode);
+            } else {
+              info.container.appendChild(childNode);
+            }
           }
           return childNode;
         });
@@ -5216,6 +5224,15 @@
 
     this.hide = function () {
       options.popover.air.hide();
+    };
+
+    this.isAncestor = function (node, parentNode) {
+      while (node) {
+        if (node === parentNode) { return true; }
+
+        node = node.parentNode;
+      }
+      return null;
     };
   };
 
@@ -5297,7 +5314,7 @@
   };
 
   $.summernote = $.extend($.summernote, {
-    version: '0.8.30',
+    version: '0.8.31',
     ui: ui,
     dom: dom,
 
