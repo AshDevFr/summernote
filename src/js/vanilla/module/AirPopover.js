@@ -94,7 +94,11 @@ define([
       if (info.rightNode) {
         info.rightNode.parentNode.insertBefore(node, info.rightNode);
       } else {
-        info.container.appendChild(node);
+        if (self.isAncestor(editable, info.container)) {
+          editable.appendChild(node);
+        } else {
+          info.container.appendChild(node);
+        }
       }
 
       self.lastRange = range.createFromNodeAfter(node);
@@ -122,7 +126,11 @@ define([
           if (info.rightNode) {
             info.rightNode.parentNode.insertBefore(childNode, info.rightNode);
           } else {
-            info.container.appendChild(childNode);
+            if (self.isAncestor(editable, info.container)) {
+              editable.appendChild(childNode);
+            } else {
+              info.container.appendChild(childNode);
+            }
           }
           return childNode;
         });
@@ -150,6 +158,15 @@ define([
 
     this.hide = function () {
       options.popover.air.hide();
+    };
+
+    this.isAncestor = function (node, parentNode) {
+      while (node) {
+        if (node === parentNode) { return true; }
+
+        node = node.parentNode;
+      }
+      return null;
     };
   };
 
