@@ -1,12 +1,12 @@
 /**
- * Super simple wysiwyg editor v0.8.32
+ * Super simple wysiwyg editor v0.8.33
  * http://summernote.org/
  *
  * summernote.js
  * Copyright 2013-2016 Alan Hong. and other contributors
  * summernote may be freely distributed under the MIT license./
  *
- * Date: 2016-10-07T17:29Z
+ * Date: 2016-10-07T22:56Z
  */
 (function (factory) {
   /* global define */
@@ -4423,7 +4423,7 @@
   };
 
   $.summernote = $.extend($.summernote, {
-    version: '0.8.32',
+    version: '0.8.33',
     ui: ui,
 
     options: {

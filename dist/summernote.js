@@ -1,12 +1,12 @@
 /**
- * Super simple wysiwyg editor v0.8.32
+ * Super simple wysiwyg editor v0.8.33
  * http://summernote.org/
  *
  * summernote.js
  * Copyright 2013-2016 Alan Hong. and other contributors
  * summernote may be freely distributed under the MIT license./
  *
- * Date: 2016-10-07T17:29Z
+ * Date: 2016-10-07T22:56Z
  */
 (function (factory) {
   /* global define */
@@ -5086,14 +5086,13 @@
       'summernote.keyup summernote.mouseup summernote.scroll': function () {
         innerMouseUp = true;
         self.update();
+        self.setLastRange();
       },
       'summernote.change summernote.dialog.shown': function () {
         self.update();
+        self.setLastRange();
       },
       'summernote.focusout': function (we, e) {
-        var currentRange = range.createFromSelection();
-        self.lastRange = currentRange ? currentRange : self.lastRange;
-
         // [workaround] Firefox doesn't support relatedTarget on focusout
         //  - Ignore hide action on focus out in FF.
         if (agent.isFF) {
@@ -5146,6 +5145,14 @@
       return options.fontNames.filter(self.isFontInstalled);
     };
 
+    this.setLastRange = function () {
+      var currentRange = range.createFromSelection();
+      if (currentRange && self.isAncestor(currentRange.sc, editable)) {
+        self.lastRange = currentRange ? currentRange : self.lastRange;
+      }
+      return self.lastRange;
+    };
+
     this.getLastRange = function () {
       return self.lastRange;
     };
@@ -5160,7 +5167,7 @@
       if (info.rightNode) {
         info.rightNode.parentNode.insertBefore(node, info.rightNode);
       } else {
-        if (!info.container || self.isAncestor(editable, info.container)) {
+        if (!info.container || !self.isAncestor(info.container, editable)) {
           editable.appendChild(node);
         } else {
           info.container.appendChild(node);
@@ -5192,7 +5199,7 @@
           if (info.rightNode) {
             info.rightNode.parentNode.insertBefore(childNode, info.rightNode);
           } else {
-            if (!info.container || self.isAncestor(editable, info.container)) {
+            if (!info.container || !self.isAncestor(info.container, editable)) {
               editable.appendChild(childNode);
             } else {
               info.container.appendChild(childNode);
@@ -5314,7 +5321,7 @@
   };
 
   $.summernote = $.extend($.summernote, {
-    version: '0.8.32',
+    version: '0.8.33',
     ui: ui,
     dom: dom,
 
