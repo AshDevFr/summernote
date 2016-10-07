@@ -20,14 +20,13 @@ define([
       'summernote.keyup summernote.mouseup summernote.scroll': function () {
         innerMouseUp = true;
         self.update();
+        self.setLastRange();
       },
       'summernote.change summernote.dialog.shown': function () {
         self.update();
+        self.setLastRange();
       },
       'summernote.focusout': function (we, e) {
-        var currentRange = range.createFromSelection();
-        self.lastRange = currentRange ? currentRange : self.lastRange;
-
         // [workaround] Firefox doesn't support relatedTarget on focusout
         //  - Ignore hide action on focus out in FF.
         if (agent.isFF) {
@@ -78,6 +77,14 @@ define([
 
     this.getAvailablesFont = function () {
       return options.fontNames.filter(self.isFontInstalled);
+    };
+
+    this.setLastRange = function () {
+      var currentRange = range.createFromSelection();
+      if (currentRange && self.isAncestor(currentRange.sc, editable)) {
+        self.lastRange = currentRange ? currentRange : self.lastRange;
+      }
+      return self.lastRange;
     };
 
     this.getLastRange = function () {
