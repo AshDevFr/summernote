@@ -94,7 +94,7 @@ define([
       if (info.rightNode) {
         info.rightNode.parentNode.insertBefore(node, info.rightNode);
       } else {
-        if (self.isAncestor(editable, info.container)) {
+        if (!info.container || self.isAncestor(editable, info.container)) {
           editable.appendChild(node);
         } else {
           info.container.appendChild(node);
@@ -126,7 +126,7 @@ define([
           if (info.rightNode) {
             info.rightNode.parentNode.insertBefore(childNode, info.rightNode);
           } else {
-            if (self.isAncestor(editable, info.container)) {
+            if (!info.container || self.isAncestor(editable, info.container)) {
               editable.appendChild(childNode);
             } else {
               info.container.appendChild(childNode);
