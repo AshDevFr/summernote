@@ -43,6 +43,7 @@ define([
       $document.on('mouseup', function () {
         if (!innerMouseUp) {
           self.update();
+          self.setLastRange();
         }
 
         innerMouseUp = false;
@@ -81,7 +82,7 @@ define([
 
     this.setLastRange = function () {
       var currentRange = range.createFromSelection();
-      if (currentRange && self.isAncestor(currentRange.sc, editable)) {
+      if (currentRange && (self.isAncestor(currentRange.sc, editable) || currentRange.sc === editable)) {
         self.lastRange = currentRange ? currentRange : self.lastRange;
       }
       return self.lastRange;
