@@ -39,6 +39,10 @@ define([
 
     };
 
+    this.getLastWordRange = function () {
+      return this.lastWordRange;
+    };
+
     this.searchKeyword = function (index, keyword, callback) {
       var hint = hints[index];
       if (hint && hint.match.test(keyword) && hint.search) {

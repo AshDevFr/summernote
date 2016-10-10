@@ -91,14 +91,15 @@ define([
       return self.lastRange;
     };
 
-    this.insertNode = function (node, rng, forceInline) {
+    this.insertNode = function (node, rng) {
       if (!$editable.is(':focus')) {
         $editable.focus();
       }
       rng = rng || self.lastRange || range.create(editable);
-      var info = dom.splitPoint(rng.getStartPoint(), forceInline || dom.isInline(node));
+      rng = rng.deleteContents();
+      var info = splitPoint(rng.getStartPoint());
 
-      if (info.rightNode) {
+      if (info.rightNode && info.rightNode.parentNode) {
         info.rightNode.parentNode.insertBefore(node, info.rightNode);
       } else {
         if (!info.container || !self.isAncestor(info.container, editable)) {
@@ -123,14 +124,15 @@ define([
         $editable.focus();
       }
       rng = rng || self.lastRange || range.create(editable);
-      var info = dom.splitPoint(rng.getStartPoint(), false);
+      rng = rng.deleteContents();
+      var info = splitPoint(rng.getStartPoint());
 
       var contentsContainer = $('<div></div>').html(markup)[0];
       if (contentsContainer && contentsContainer.childNodes) {
         var childNodes = list.from(contentsContainer.childNodes);
 
         var contents = childNodes.map(function (childNode) {
-          if (info.rightNode) {
+          if (info.rightNode && info.rightNode.parentNode) {
             info.rightNode.parentNode.insertBefore(childNode, info.rightNode);
           } else {
             if (!info.container || !self.isAncestor(info.container, editable)) {
@@ -175,6 +177,39 @@ define([
       }
       return null;
     };
+
+    function splitPoint(point) {
+      if (dom.isEdgePoint(point) && dom.isRightEdgePoint(point)) {
+        if (dom.isText(point.node)) {
+          return {
+            rightNode: point.node.nextSibling,
+            container: point.node.parentNode
+          };
+        }
+
+        return {
+          container: point.node
+        };
+      }
+
+      // split #text
+      if (dom.isText(point.node)) {
+        return {
+          rightNode: point.node.splitText(point.offset),
+          container: point.node.parentNode
+        };
+      } else {
+        if (point.offset < point.node.childNodes.length) {
+          return {
+            rightNode: point.node.childNodes[point.offset],
+            container: point.node
+          };
+        }
+        return {
+          container: point.node
+        };
+      }
+    }
   };
 
   return AirPopover;
