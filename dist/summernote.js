@@ -1,12 +1,12 @@
 /**
- * Super simple wysiwyg editor v0.8.33
+ * Super simple wysiwyg editor v0.8.34
  * http://summernote.org/
  *
  * summernote.js
  * Copyright 2013-2016 Alan Hong. and other contributors
  * summernote may be freely distributed under the MIT license./
  *
- * Date: 2016-10-07T22:56Z
+ * Date: 2016-10-10T23:16Z
  */
 (function (factory) {
   /* global define */
@@ -4950,8 +4950,8 @@
 
   var AutoLink = function (context) {
     var self = this;
-    var defaultScheme = 'http://';
-    var linkPattern = /^([A-Za-z][A-Za-z0-9+-.]*\:[\/\/]?|mailto:[A-Z0-9._%+-]+@)?(www\.)?(.+)$/i;
+    var linkPattern = /^((http|https|ftp|mailto):\/\/\S+)$/,
+        httpPattern = /^(www\.\w+\.[a-z]{2,3}[\w+\/\?\=]*)$/;
 
     this.events = {
       'summernote.keydown': function (we, e) {
@@ -4972,13 +4972,16 @@
         return;
       }
 
-      var keyword = this.lastWordRange.toString();
-      var match = keyword.match(linkPattern);
+      var keyword = this.lastWordRange.toString(),
+          node;
 
-      if (match && (match[1] || match[2])) {
-        var link = match[1] ? keyword : defaultScheme + keyword;
-        var node = $('<a />').html(keyword).attr('href', link)[0];
+      if (linkPattern.exec(keyword)) {
+        node = $('<a />').html(keyword).attr('href', keyword)[0];
+      } else if (httpPattern.exec(keyword)) {
+        node = $('<a />').html(keyword).attr('href', 'http://' + keyword)[0];
+      }
 
+      if (node) {
         this.lastWordRange.insertNode(node);
         range.createFromNode(node).collapse().select();
 
@@ -5109,6 +5112,7 @@
       $document.on('mouseup', function () {
         if (!innerMouseUp) {
           self.update();
+          self.setLastRange();
         }
 
         innerMouseUp = false;
@@ -5147,7 +5151,7 @@
 
     this.setLastRange = function () {
       var currentRange = range.createFromSelection();
-      if (currentRange && self.isAncestor(currentRange.sc, editable)) {
+      if (currentRange && (self.isAncestor(currentRange.sc, editable) || currentRange.sc === editable)) {
         self.lastRange = currentRange ? currentRange : self.lastRange;
       }
       return self.lastRange;
@@ -5157,14 +5161,15 @@
       return self.lastRange;
     };
 
-    this.insertNode = function (node, rng, forceInline) {
+    this.insertNode = function (node, rng) {
       if (!$editable.is(':focus')) {
         $editable.focus();
       }
       rng = rng || self.lastRange || range.create(editable);
-      var info = dom.splitPoint(rng.getStartPoint(), forceInline || dom.isInline(node));
+      rng = rng.deleteContents();
+      var info = splitPoint(rng.getStartPoint());
 
-      if (info.rightNode) {
+      if (info.rightNode && info.rightNode.parentNode) {
         info.rightNode.parentNode.insertBefore(node, info.rightNode);
       } else {
         if (!info.container || !self.isAncestor(info.container, editable)) {
@@ -5189,14 +5194,15 @@
         $editable.focus();
       }
       rng = rng || self.lastRange || range.create(editable);
-      var info = dom.splitPoint(rng.getStartPoint(), false);
+      rng = rng.deleteContents();
+      var info = splitPoint(rng.getStartPoint());
 
       var contentsContainer = $('<div></div>').html(markup)[0];
       if (contentsContainer && contentsContainer.childNodes) {
         var childNodes = list.from(contentsContainer.childNodes);
 
         var contents = childNodes.map(function (childNode) {
-          if (info.rightNode) {
+          if (info.rightNode && info.rightNode.parentNode) {
             info.rightNode.parentNode.insertBefore(childNode, info.rightNode);
           } else {
             if (!info.container || !self.isAncestor(info.container, editable)) {
@@ -5241,6 +5247,39 @@
       }
       return null;
     };
+
+    function splitPoint(point) {
+      if (dom.isEdgePoint(point) && dom.isRightEdgePoint(point)) {
+        if (dom.isText(point.node)) {
+          return {
+            rightNode: point.node.nextSibling,
+            container: point.node.parentNode
+          };
+        }
+
+        return {
+          container: point.node
+        };
+      }
+
+      // split #text
+      if (dom.isText(point.node)) {
+        return {
+          rightNode: point.node.splitText(point.offset),
+          container: point.node.parentNode
+        };
+      } else {
+        if (point.offset < point.node.childNodes.length) {
+          return {
+            rightNode: point.node.childNodes[point.offset],
+            container: point.node
+          };
+        }
+        return {
+          container: point.node
+        };
+      }
+    }
   };
 
   var Hint = function (context) {
@@ -5275,6 +5314,10 @@
         context.invoke('editor.focus');
       }
 
+    };
+
+    this.getLastWordRange = function () {
+      return this.lastWordRange;
     };
 
     this.searchKeyword = function (index, keyword, callback) {
@@ -5321,7 +5364,7 @@
   };
 
   $.summernote = $.extend($.summernote, {
-    version: '0.8.33',
+    version: '0.8.34',
     ui: ui,
     dom: dom,
 

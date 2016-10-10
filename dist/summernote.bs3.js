@@ -1,12 +1,12 @@
 /**
- * Super simple wysiwyg editor v0.8.33
+ * Super simple wysiwyg editor v0.8.34
  * http://summernote.org/
  *
  * summernote.js
  * Copyright 2013-2016 Alan Hong. and other contributors
  * summernote may be freely distributed under the MIT license./
  *
- * Date: 2016-10-07T22:56Z
+ * Date: 2016-10-10T23:16Z
  */
 (function (factory) {
   /* global define */
@@ -5092,8 +5092,8 @@
 
   var AutoLink = function (context) {
     var self = this;
-    var defaultScheme = 'http://';
-    var linkPattern = /^([A-Za-z][A-Za-z0-9+-.]*\:[\/\/]?|mailto:[A-Z0-9._%+-]+@)?(www\.)?(.+)$/i;
+    var linkPattern = /^((http|https|ftp|mailto):\/\/\S+)$/,
+        httpPattern = /^(www\.\w+\.[a-z]{2,3}[\w+\/\?\=]*)$/;
 
     this.events = {
       'summernote.keydown': function (we, e) {
@@ -5114,13 +5114,16 @@
         return;
       }
 
-      var keyword = this.lastWordRange.toString();
-      var match = keyword.match(linkPattern);
+      var keyword = this.lastWordRange.toString(),
+          node;
 
-      if (match && (match[1] || match[2])) {
-        var link = match[1] ? keyword : defaultScheme + keyword;
-        var node = $('<a />').html(keyword).attr('href', link)[0];
+      if (linkPattern.exec(keyword)) {
+        node = $('<a />').html(keyword).attr('href', keyword)[0];
+      } else if (httpPattern.exec(keyword)) {
+        node = $('<a />').html(keyword).attr('href', 'http://' + keyword)[0];
+      }
 
+      if (node) {
         this.lastWordRange.insertNode(node);
         range.createFromNode(node).collapse().select();
 
@@ -6522,7 +6525,7 @@
 
       var body = [
         '<p class="text-center">',
-        '<a href="http://summernote.org/" target="_blank">Summernote 0.8.33</a> · ',
+        '<a href="http://summernote.org/" target="_blank">Summernote 0.8.34</a> · ',
         '<a href="https://github.com/summernote/summernote" target="_blank">Project</a> · ',
         '<a href="https://github.com/summernote/summernote/issues" target="_blank">Issues</a>',
         '</p>'
@@ -6867,7 +6870,7 @@
 
 
   $.summernote = $.extend($.summernote, {
-    version: '0.8.33',
+    version: '0.8.34',
     ui: ui,
     dom: dom,
 
