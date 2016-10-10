@@ -7,8 +7,8 @@ define([
 ], function (func, list, dom, range, key) {
   var AutoLink = function (context) {
     var self = this;
-    var defaultScheme = 'http://';
-    var linkPattern = /^([A-Za-z][A-Za-z0-9+-.]*\:[\/\/]?|mailto:[A-Z0-9._%+-]+@)?(www\.)?(.+)$/i;
+    var linkPattern = /^((http|https|ftp|mailto):\/\/\S+)$/,
+        httpPattern = /^(www\.\w+\.[a-z]{2,3}[\w+\/\?\=]*)$/;
 
     this.events = {
       'summernote.keydown': function (we, e) {
@@ -29,13 +29,16 @@ define([
         return;
       }
 
-      var keyword = this.lastWordRange.toString();
-      var match = keyword.match(linkPattern);
+      var keyword = this.lastWordRange.toString(),
+          node;
 
-      if (match && (match[1] || match[2])) {
-        var link = match[1] ? keyword : defaultScheme + keyword;
-        var node = $('<a />').html(keyword).attr('href', link)[0];
+      if (linkPattern.exec(keyword)) {
+        node = $('<a />').html(keyword).attr('href', keyword)[0];
+      } else if (httpPattern.exec(keyword)) {
+        node = $('<a />').html(keyword).attr('href', 'http://' + keyword)[0];
+      }
 
+      if (node) {
         this.lastWordRange.insertNode(node);
         range.createFromNode(node).collapse().select();
 
