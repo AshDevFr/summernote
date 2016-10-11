@@ -14,11 +14,8 @@ define([
 
     var options = context.options;
 
-    var innerMouseUp;
-
     this.events = {
       'summernote.keyup summernote.mouseup summernote.scroll': function () {
-        innerMouseUp = true;
         self.update();
         self.setLastRange();
       },
@@ -41,14 +38,23 @@ define([
 
     $editable.on('mousedown', function () {
       $document.on('mouseup', function () {
-        if (!innerMouseUp) {
-          self.update();
-          self.setLastRange();
-        }
-
-        innerMouseUp = false;
-        $document.off('mouseup');
+        mouseUp();
       });
+      $(window).on('mouseup', function () {
+        mouseUp();
+      });
+      $(window).on('blur', function () {
+        mouseUp();
+      });
+
+      function mouseUp() {
+        self.update();
+        self.setLastRange();
+
+        $document.off('mouseup');
+        $(window).off('mouseup');
+        $(window).off('blur');
+      }
     });
 
     this.shouldInitialize = function () {
