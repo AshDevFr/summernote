@@ -165,7 +165,7 @@ define([
 
         var headList = isEscapseToBody ? dom.lastAncestor(head, dom.isList) :
                                          head.parentNode;
-        var lastList = headList.childNodes.length > 1 ? dom.splitTree(headList, {
+        var lastList = headList.childNodes && headList.childNodes.length > 1 ? dom.splitTree(headList, {
           node: last.parentNode,
           offset: dom.position(last) + 1
         }, {
