@@ -1,12 +1,12 @@
 /**
- * Super simple wysiwyg editor v0.8.35
+ * Super simple wysiwyg editor v0.8.36
  * http://summernote.org/
  *
  * summernote.js
  * Copyright 2013-2016 Alan Hong. and other contributors
  * summernote may be freely distributed under the MIT license./
  *
- * Date: 2016-10-11T21:08Z
+ * Date: 2016-10-14T22:31Z
  */
 (function (factory) {
   /* global define */
@@ -2267,6 +2267,7 @@
           return textRange;
         }
       };
+      this.nativeRange = nativeRange;
 
       this.getPoints = function () {
         return {
@@ -3406,7 +3407,7 @@
 
         var headList = isEscapseToBody ? dom.lastAncestor(head, dom.isList) :
                                          head.parentNode;
-        var lastList = headList.childNodes.length > 1 ? dom.splitTree(headList, {
+        var lastList = headList.childNodes && headList.childNodes.length > 1 ? dom.splitTree(headList, {
           node: last.parentNode,
           offset: dom.position(last) + 1
         }, {
@@ -4209,10 +4210,10 @@
      */
     this.createLink = this.wrapCommand(function (linkInfo) {
       var linkUrl = linkInfo.url;
-      var linkText = linkInfo.text;
+      var linkText = typeof linkInfo.text === 'string' ? linkInfo.text : null;
       var isNewWindow = linkInfo.isNewWindow;
       var rng = linkInfo.range || this.createRange();
-      var isTextChanged = rng.toString() !== linkText;
+      var isTextChanged = linkText !== null && rng.toString() !== linkText;
 
       // handle spaced urls from input
       if (typeof linkUrl === 'string') {
@@ -4223,10 +4224,16 @@
         linkUrl = options.onCreateLink(linkUrl);
       }
 
-      var anchors = [];
-      if (isTextChanged) {
+      var anchors = [],
+        anchor;
+      if (linkInfo.keepContent && rng.nativeRange() && rng.nativeRange().cloneContents()) {
+        var content = $('<div>').append(rng.nativeRange().cloneContents()).html();
         rng = rng.deleteContents();
-        var anchor = rng.insertNode($('<A>' + linkText + '</A>')[0]);
+        anchor = rng.insertNode($('<A>' + content + '</A>')[0]);
+        anchors.push(anchor);
+      } else if (isTextChanged) {
+        rng = rng.deleteContents();
+        anchor = rng.insertNode($('<A>' + linkText + '</A>')[0]);
         anchors.push(anchor);
       } else {
         anchors = style.styleNodes(rng, {
@@ -4423,7 +4430,7 @@
   };
 
   $.summernote = $.extend($.summernote, {
-    version: '0.8.35',
+    version: '0.8.36',
     ui: ui,
 
     options: {
