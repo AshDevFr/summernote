@@ -145,6 +145,7 @@ define([
           return textRange;
         }
       };
+      this.nativeRange = nativeRange;
 
       this.getPoints = function () {
         return {

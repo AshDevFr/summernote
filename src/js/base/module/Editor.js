@@ -634,10 +634,10 @@ define([
      */
     this.createLink = this.wrapCommand(function (linkInfo) {
       var linkUrl = linkInfo.url;
-      var linkText = linkInfo.text;
+      var linkText = typeof linkInfo.text === 'string' ? linkInfo.text : null;
       var isNewWindow = linkInfo.isNewWindow;
       var rng = linkInfo.range || this.createRange();
-      var isTextChanged = rng.toString() !== linkText;
+      var isTextChanged = linkText !== null && rng.toString() !== linkText;
 
       // handle spaced urls from input
       if (typeof linkUrl === 'string') {
@@ -648,10 +648,16 @@ define([
         linkUrl = options.onCreateLink(linkUrl);
       }
 
-      var anchors = [];
-      if (isTextChanged) {
+      var anchors = [],
+        anchor;
+      if (linkInfo.keepContent && rng.nativeRange() && rng.nativeRange().cloneContents()) {
+        var content = $('<div>').append(rng.nativeRange().cloneContents()).html();
         rng = rng.deleteContents();
-        var anchor = rng.insertNode($('<A>' + linkText + '</A>')[0]);
+        anchor = rng.insertNode($('<A>' + content + '</A>')[0]);
+        anchors.push(anchor);
+      } else if (isTextChanged) {
+        rng = rng.deleteContents();
+        anchor = rng.insertNode($('<A>' + linkText + '</A>')[0]);
         anchors.push(anchor);
       } else {
         anchors = style.styleNodes(rng, {
