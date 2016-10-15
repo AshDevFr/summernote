@@ -1,12 +1,12 @@
 /**
- * Super simple wysiwyg editor v0.8.36
+ * Super simple wysiwyg editor v0.8.37
  * http://summernote.org/
  *
  * summernote.js
  * Copyright 2013-2016 Alan Hong. and other contributors
  * summernote may be freely distributed under the MIT license./
  *
- * Date: 2016-10-14T22:31Z
+ * Date: 2016-10-15T00:38Z
  */
 (function (factory) {
   /* global define */
@@ -4225,6 +4225,19 @@
         beforeCommand();
         document.execCommand('unlink');
         afterCommand();
+      } else {
+        var anchors = rng.nodes(dom.isAnchor) || [];
+        if (anchors.length) {
+          beforeCommand();
+          $.each(anchors, function (idx, anchor) {
+            var ancestor = anchor.parentNode;
+            $.each(list.from(anchor.childNodes), function (idx, child) {
+              ancestor.insertBefore(child, anchor);
+              ancestor.removeChild(anchor);
+            });
+          });
+          afterCommand();
+        }
       }
     };
 
@@ -5377,7 +5390,7 @@
   };
 
   $.summernote = $.extend($.summernote, {
-    version: '0.8.36',
+    version: '0.8.37',
     ui: ui,
     dom: dom,
 
