@@ -624,6 +624,19 @@ define([
         beforeCommand();
         document.execCommand('unlink');
         afterCommand();
+      } else {
+        var anchors = rng.nodes(dom.isAnchor) || [];
+        if (anchors.length) {
+          beforeCommand();
+          $.each(anchors, function (idx, anchor) {
+            var ancestor = anchor.parentNode;
+            $.each(list.from(anchor.childNodes), function (idx, child) {
+              ancestor.insertBefore(child, anchor);
+              ancestor.removeChild(anchor);
+            });
+          });
+          afterCommand();
+        }
       }
     };
 
