@@ -632,8 +632,8 @@ define([
             var ancestor = anchor.parentNode;
             $.each(list.from(anchor.childNodes), function (idx, child) {
               ancestor.insertBefore(child, anchor);
-              ancestor.removeChild(anchor);
             });
+            ancestor.removeChild(anchor);
           });
           afterCommand();
         }
