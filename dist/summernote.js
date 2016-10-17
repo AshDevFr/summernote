@@ -1,12 +1,12 @@
 /**
- * Super simple wysiwyg editor v0.8.37
+ * Super simple wysiwyg editor v0.8.38
  * http://summernote.org/
  *
  * summernote.js
  * Copyright 2013-2016 Alan Hong. and other contributors
  * summernote may be freely distributed under the MIT license./
  *
- * Date: 2016-10-15T00:38Z
+ * Date: 2016-10-17T20:12Z
  */
 (function (factory) {
   /* global define */
@@ -4233,8 +4233,8 @@
             var ancestor = anchor.parentNode;
             $.each(list.from(anchor.childNodes), function (idx, child) {
               ancestor.insertBefore(child, anchor);
-              ancestor.removeChild(anchor);
             });
+            ancestor.removeChild(anchor);
           });
           afterCommand();
         }
@@ -5274,6 +5274,49 @@
       return null;
     };
 
+    this.removeFormat = function (rng) {
+      removeFormat(rng, function (node) {
+        return node && /^BACKQUOTE|^A|^LI|^UL|^EM|^B|^I|^STRONG|^H[1-7]/.test(node.nodeName.toUpperCase());
+      });
+    };
+
+    this.unQuote = function (rng) {
+      removeFormat(rng, dom.isBlockquote);
+    };
+
+    function removeFormat(rng, pred) {
+      if (!pred) {
+        return;
+      }
+
+      if (!$editable.is(':focus')) {
+        $editable.focus();
+      }
+      rng = rng || self.lastRange || range.create(editable);
+
+      context.invoke('editor.beforeCommand');
+
+      if (rng.sc !== rng.ec) {
+        $.each(list.from(rng.nodes()), removeFormatNode);
+      } else {
+        removeFormatNode(rng.sc);
+      }
+
+      context.invoke('editor.afterCommand');
+
+      function removeFormatNode(rangeNode) {
+        var ancestors = dom.listAncestor(rangeNode);
+
+        ancestors.filter(pred).forEach(function (node) {
+          var ancestor = node.parentNode;
+          $.each(list.from(node.childNodes), function (idx, child) {
+            ancestor.insertBefore(child, node);
+          });
+          ancestor.removeChild(node);
+        });
+      }
+    }
+
     function splitPoint(point) {
       if (dom.isEdgePoint(point) && dom.isRightEdgePoint(point)) {
         if (dom.isText(point.node)) {
@@ -5390,7 +5433,7 @@
   };
 
   $.summernote = $.extend($.summernote, {
-    version: '0.8.37',
+    version: '0.8.38',
     ui: ui,
     dom: dom,
 

@@ -1,12 +1,12 @@
 /**
- * Super simple wysiwyg editor v0.8.37
+ * Super simple wysiwyg editor v0.8.38
  * http://summernote.org/
  *
  * summernote.js
  * Copyright 2013-2016 Alan Hong. and other contributors
  * summernote may be freely distributed under the MIT license./
  *
- * Date: 2016-10-15T00:38Z
+ * Date: 2016-10-17T20:12Z
  */
 (function (factory) {
   /* global define */
@@ -4375,8 +4375,8 @@
             var ancestor = anchor.parentNode;
             $.each(list.from(anchor.childNodes), function (idx, child) {
               ancestor.insertBefore(child, anchor);
-              ancestor.removeChild(anchor);
             });
+            ancestor.removeChild(anchor);
           });
           afterCommand();
         }
@@ -6545,7 +6545,7 @@
 
       var body = [
         '<p class="text-center">',
-        '<a href="http://summernote.org/" target="_blank">Summernote 0.8.37</a> · ',
+        '<a href="http://summernote.org/" target="_blank">Summernote 0.8.38</a> · ',
         '<a href="https://github.com/summernote/summernote" target="_blank">Project</a> · ',
         '<a href="https://github.com/summernote/summernote/issues" target="_blank">Issues</a>',
         '</p>'
@@ -6890,7 +6890,7 @@
 
 
   $.summernote = $.extend($.summernote, {
-    version: '0.8.37',
+    version: '0.8.38',
     ui: ui,
     dom: dom,
 
