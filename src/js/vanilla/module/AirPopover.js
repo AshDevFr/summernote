@@ -191,7 +191,7 @@ define([
       });
     };
 
-    this.unQuote = function (rng) {
+    this.unquote = function (rng) {
       removeFormat(rng, dom.isBlockquote);
     };
 
@@ -215,15 +215,16 @@ define([
 
       context.invoke('editor.afterCommand');
 
-      function removeFormatNode(rangeNode) {
+      function removeFormatNode(idx, rangeNode) {
         var ancestors = dom.listAncestor(rangeNode);
-
         ancestors.filter(pred).forEach(function (node) {
           var ancestor = node.parentNode;
-          $.each(list.from(node.childNodes), function (idx, child) {
-            ancestor.insertBefore(child, node);
-          });
-          ancestor.removeChild(node);
+          if (ancestor) {
+            $.each(list.from(node.childNodes), function (idx, child) {
+              ancestor.insertBefore(child, node);
+            });
+            ancestor.removeChild(node);
+          }
         });
       }
     }
