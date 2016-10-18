@@ -1,12 +1,12 @@
 /**
- * Super simple wysiwyg editor v0.8.38
+ * Super simple wysiwyg editor v0.8.39
  * http://summernote.org/
  *
  * summernote.js
  * Copyright 2013-2016 Alan Hong. and other contributors
  * summernote may be freely distributed under the MIT license./
  *
- * Date: 2016-10-17T20:12Z
+ * Date: 2016-10-18T16:18Z
  */
 (function (factory) {
   /* global define */
@@ -5280,7 +5280,7 @@
       });
     };
 
-    this.unQuote = function (rng) {
+    this.unquote = function (rng) {
       removeFormat(rng, dom.isBlockquote);
     };
 
@@ -5304,15 +5304,16 @@
 
       context.invoke('editor.afterCommand');
 
-      function removeFormatNode(rangeNode) {
+      function removeFormatNode(idx, rangeNode) {
         var ancestors = dom.listAncestor(rangeNode);
-
         ancestors.filter(pred).forEach(function (node) {
           var ancestor = node.parentNode;
-          $.each(list.from(node.childNodes), function (idx, child) {
-            ancestor.insertBefore(child, node);
-          });
-          ancestor.removeChild(node);
+          if (ancestor) {
+            $.each(list.from(node.childNodes), function (idx, child) {
+              ancestor.insertBefore(child, node);
+            });
+            ancestor.removeChild(node);
+          }
         });
       }
     }
@@ -5433,7 +5434,7 @@
   };
 
   $.summernote = $.extend($.summernote, {
-    version: '0.8.38',
+    version: '0.8.39',
     ui: ui,
     dom: dom,
 
