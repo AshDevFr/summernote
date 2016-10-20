@@ -199,6 +199,117 @@ define([
       removeFormat(rng, dom.isBlockquote);
     };
 
+    this.splitPara = function (rng) {
+      if (!$editable.is(':focus')) {
+        $editable.focus();
+      }
+      rng = rng || self.lastRange || range.create(editable);
+
+      context.invoke('editor.beforeCommand');
+
+      splitPointDeep(rng.getStartPoint());
+
+      context.invoke('editor.afterCommand');
+    };
+
+    this.createPara = function (rng) {
+      if (!$editable.is(':focus')) {
+        $editable.focus();
+      }
+      rng = rng || self.lastRange || range.create(editable);
+
+      context.invoke('editor.beforeCommand');
+
+      var info = {},
+          leftPoint, startPoint, endPoint,
+          leftRange, rightRange;
+      if (rng.sc === rng.ec && rng.so === rng.eo) {
+        info.left = splitPointDeep(rng.getStartPoint());
+      } else {
+        startPoint = rng.getStartPoint();
+        endPoint = rng.getEndPoint();
+        if (startPoint.node === endPoint.node) {
+          endPoint.offset -= startPoint.offset;
+        }
+        info.left = splitPointDeep(startPoint);
+        if (info.left.rightNode) {
+          leftRange = range.createFromNodeBefore(info.left.rightNode);
+          leftPoint = dom.prevPoint(leftRange.getStartPoint());
+          if (leftPoint) {
+            leftRange = range.create(leftPoint.node, leftPoint.offset, leftPoint.node, leftPoint.offset);
+          }
+        }
+        info.right = splitPointDeep(endPoint);
+      }
+
+      if (info.right) {
+        if (info.right.rightNode) {
+          rightRange = range.createFromNodeBefore(info.right.rightNode);
+          leftPoint = dom.prevPointUntil(rightRange.getStartPoint(), dom.isVisiblePoint);
+          if (leftPoint) {
+            rightRange = range.create(leftPoint.node, leftPoint.offset, leftPoint.node, leftPoint.offset);
+          }
+        } else {
+          rightRange = self.moveCursorToEnd();
+        }
+      } else if (!leftRange) {
+        leftRange = self.moveCursorToEnd();
+      }
+
+      if (rightRange) {
+        startPoint = leftRange.getStartPoint();
+        endPoint = rightRange.getStartPoint();
+        rng = range.create(startPoint.node, startPoint.offset, endPoint.node, endPoint.offset);
+      } else {
+        startPoint = leftRange.getStartPoint();
+        rng = range.create(startPoint.node, startPoint.offset, startPoint.node, startPoint.offset);
+      }
+
+      self.lastRange = rng;
+      self.lastRange.select();
+
+      context.invoke('editor.afterCommand');
+
+      return self.lastRange;
+    };
+
+    this.getFullParaRange = function (rng) {
+      rng = rng || self.lastRange || range.create(editable);
+      if (!rng) {
+        return null;
+      }
+
+      var startPoint = rng.getStartPoint(),
+          endPoint = rng.getEndPoint(),
+          leftPoint = getStartLinePoint(startPoint),
+          rightPoint = getEndLinePoint(endPoint);
+
+      if (leftPoint && !dom.isSamePoint(leftPoint, startPoint)) {
+        startPoint = leftPoint;
+      }
+
+      if (rightPoint && !dom.isSamePoint(rightPoint, endPoint)) {
+        endPoint = rightPoint;
+      }
+
+      return range.create(startPoint.node, startPoint.offset, endPoint.node, endPoint.offset);
+
+      function getStartLinePoint(point) {
+        return dom.prevPointUntil(point, function (newPoint) {
+          var prevPoint = dom.prevPoint(newPoint);
+          return (dom.isLeftEdgePoint(newPoint) && (dom.isPara(newPoint.node) || dom.isBlockquote(newPoint.node))) ||
+            (prevPoint.node && /^BR|^HR|^IFRAME/.test(prevPoint.node.nodeName.toUpperCase()));
+        });
+      }
+
+      function getEndLinePoint(point) {
+        return dom.nextPointUntil(point, function (newPoint) {
+          return (dom.isRightEdgePoint(newPoint) && (dom.isPara(newPoint.node) || dom.isBlockquote(newPoint.node))) ||
+            (newPoint.node && /^BR|^HR|^IFRAME/.test(newPoint.node.nodeName.toUpperCase()));
+        });
+      }
+    };
+
     function removeFormat(rng, pred) {
       if (!pred) {
         return;
