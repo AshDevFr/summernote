@@ -122,8 +122,10 @@ define([
 
     this.moveCursorToEnd = function () {
       if (editable.lastChild || editable.lastElementChild) {
-        range.createFromNodeAfter(editable.lastChild || editable.lastElementChild).select();
+        self.lastRange = range.createFromNodeAfter(editable.lastChild || editable.lastElementChild);
+        self.lastRange.select();
       }
+      return self.lastRange;
     };
 
     this.pasteHTML = function (markup, rng) {
