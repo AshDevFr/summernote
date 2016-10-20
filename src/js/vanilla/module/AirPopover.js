@@ -98,13 +98,14 @@ define([
       return self.lastRange;
     };
 
-    this.insertNode = function (node, rng) {
+    this.insertNode = function (node, rng, deep) {
       if (!$editable.is(':focus')) {
         $editable.focus();
       }
       rng = rng || self.lastRange || range.create(editable);
       rng = rng.deleteContents();
-      var info = splitPoint(rng.getStartPoint());
+      var splitFn = deep ? splitPointDeep : splitPoint,
+          info = splitFn(rng.getStartPoint());
 
       if (info.rightNode && info.rightNode.parentNode) {
         info.rightNode.parentNode.insertBefore(node, info.rightNode);
@@ -128,13 +129,14 @@ define([
       return self.lastRange;
     };
 
-    this.pasteHTML = function (markup, rng) {
+    this.pasteHTML = function (markup, rng, deep) {
       if (!$editable.is(':focus')) {
         $editable.focus();
       }
       rng = rng || self.lastRange || range.create(editable);
       rng = rng.deleteContents();
-      var info = splitPoint(rng.getStartPoint());
+      var splitFn = deep ? splitPointDeep : splitPoint,
+          info = splitFn(rng.getStartPoint());
 
       var contentsContainer = $('<div></div>').html(markup)[0];
       if (contentsContainer && contentsContainer.childNodes) {
@@ -262,6 +264,57 @@ define([
           container: point.node
         };
       }
+    }
+
+    function splitPointDeep(point) {
+      var leftPoint = dom.prevPointUntil(point, function (newPoint) {
+        return !dom.isLeftEdgePoint(newPoint) || (dom.isLeftEdgePoint(newPoint) && newPoint.node === editable);
+      });
+      var rightPoint = dom.nextPointUntil(point, function (newPoint) {
+        return !dom.isRightEdgePoint(newPoint) || (dom.isRightEdgePoint(newPoint) && newPoint.node === editable);
+      });
+
+      if (leftPoint && !dom.isSamePoint(leftPoint, point)) {
+        point = leftPoint;
+      } else if (rightPoint && !dom.isSamePoint(rightPoint, point)) {
+        point = rightPoint;
+      }
+
+      var brNode;
+      leftPoint = dom.prevPoint(point);
+      rightPoint = dom.nextPoint(point);
+
+      if (leftPoint && dom.isBR(leftPoint.node)) {
+        brNode = leftPoint.node;
+        leftPoint = dom.prevPoint(leftPoint);
+        brNode.parentNode.removeChild(brNode);
+        if (leftPoint) {
+          point = leftPoint;
+        }
+      } else if (rightPoint && dom.isBR(rightPoint.node)) {
+        brNode = rightPoint.node;
+        rightPoint = dom.prevPoint(rightPoint);
+        brNode.parentNode.removeChild(brNode);
+        if (rightPoint) {
+          point = rightPoint;
+        }
+      }
+
+      var leftRng = range.create(editable, 0, point.node, point.offset),
+          leftContent = leftRng.nativeRange().extractContents(),
+          rightNode;
+
+      if (list.from(editable.childNodes).length) {
+        rightNode = editable.childNodes[0];
+        editable.insertBefore(leftContent, rightNode);
+      } else {
+        editable.appendChild(leftContent);
+      }
+
+      return {
+        container: editable,
+        rightNode: rightNode
+      };
     }
   };
 
