@@ -29,6 +29,13 @@ define([
         return;
       }
 
+      var anchors = this.lastWordRange.nodes().filter(function (node) {
+        return dom.ancestor(node, dom.isAnchor);
+      }).length;
+      if (anchors) {
+        return;
+      }
+
       var keyword = this.lastWordRange.toString(),
           node;
 
