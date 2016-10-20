@@ -196,6 +196,8 @@ define([
     };
 
     this.unquote = function (rng) {
+      rng = self.getFullParaRange(rng);
+      rng = self.createPara(rng);
       removeFormat(rng, dom.isBlockquote);
     };
 
