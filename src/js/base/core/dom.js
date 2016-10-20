@@ -51,7 +51,7 @@ define([
     var makePredByNodeName = function (nodeName) {
       nodeName = nodeName.toUpperCase();
       return function (node) {
-        return node && node.nodeName.toUpperCase() === nodeName;
+        return node && node.nodeName && node.nodeName.toUpperCase() === nodeName;
       };
     };
 
@@ -84,7 +84,7 @@ define([
      * @see http://www.w3.org/html/wg/drafts/html/master/syntax.html#void-elements
      */
     var isVoid = function (node) {
-      return node && /^BR|^IMG|^HR|^IFRAME|^BUTTON/.test(node.nodeName.toUpperCase());
+      return node && node.nodeName && /^BR|^IMG|^HR|^IFRAME|^BUTTON/.test(node.nodeName.toUpperCase());
     };
 
     var isPara = function (node) {
@@ -93,11 +93,11 @@ define([
       }
 
       // Chrome(v31.0), FF(v25.0.1) use DIV for paragraph
-      return node && /^DIV|^P|^LI|^H[1-7]/.test(node.nodeName.toUpperCase());
+      return node && node.nodeName && /^DIV|^P|^LI|^H[1-7]/.test(node.nodeName.toUpperCase());
     };
 
     var isHeading = function (node) {
-      return node && /^H[1-7]/.test(node.nodeName.toUpperCase());
+      return node && node.nodeName && /^H[1-7]/.test(node.nodeName.toUpperCase());
     };
 
     var isPre = makePredByNodeName('PRE');
@@ -123,13 +123,13 @@ define([
     };
 
     var isList = function (node) {
-      return node && /^UL|^OL/.test(node.nodeName.toUpperCase());
+      return node && node.nodeName && /^UL|^OL/.test(node.nodeName.toUpperCase());
     };
 
     var isHr = makePredByNodeName('HR');
 
     var isCell = function (node) {
-      return node && /^TD|^TH/.test(node.nodeName.toUpperCase());
+      return node && node.nodeName && /^TD|^TH/.test(node.nodeName.toUpperCase());
     };
 
     var isBlockquote = makePredByNodeName('BLOCKQUOTE');
@@ -913,7 +913,7 @@ define([
      * @return {Node} - new node
      */
     var replace = function (node, nodeName) {
-      if (node.nodeName.toUpperCase() === nodeName.toUpperCase()) {
+      if (node.nodeName && node.nodeName.toUpperCase() === nodeName.toUpperCase()) {
         return node;
       }
 
