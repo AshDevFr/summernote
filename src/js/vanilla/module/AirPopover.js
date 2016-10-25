@@ -302,7 +302,7 @@ define([
         return dom.prevPointUntil(point, function (newPoint) {
           var prevPoint = dom.prevPoint(newPoint);
           return (dom.isLeftEdgePoint(newPoint) && (dom.isPara(newPoint.node) || dom.isBlockquote(newPoint.node))) ||
-            (prevPoint.node && /^BR|^HR|^IFRAME/.test(prevPoint.node.nodeName.toUpperCase()));
+            (prevPoint && prevPoint.node && /^BR|^HR|^IFRAME/.test(prevPoint.node.nodeName.toUpperCase()));
         });
       }
 
