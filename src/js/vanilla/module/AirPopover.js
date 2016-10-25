@@ -99,6 +99,7 @@ define([
     };
 
     this.insertNode = function (node, rng, deep) {
+      context.invoke('editor.beforeCommand');
       if (!$editable.is(':focus')) {
         $editable.focus();
       }
@@ -119,17 +120,21 @@ define([
 
       self.lastRange = range.createFromNodeAfter(node);
       self.lastRange.select();
+      context.invoke('editor.afterCommand');
     };
 
     this.moveCursorToEnd = function () {
+      context.invoke('editor.beforeCommand');
       if (editable.lastChild || editable.lastElementChild) {
         self.lastRange = range.createFromNodeAfter(editable.lastChild || editable.lastElementChild);
         self.lastRange.select();
       }
+      context.invoke('editor.afterCommand');
       return self.lastRange;
     };
 
     this.pasteHTML = function (markup, rng, deep) {
+      context.invoke('editor.beforeCommand');
       if (!$editable.is(':focus')) {
         $editable.focus();
       }
@@ -158,6 +163,7 @@ define([
         self.lastRange = range.createFromNodeAfter(list.last(contents));
         self.lastRange.select();
       }
+      context.invoke('editor.afterCommand');
     };
 
     this.update = function (force) {
@@ -220,8 +226,6 @@ define([
       }
       rng = rng || self.lastRange || range.create(editable);
 
-      context.invoke('editor.beforeCommand');
-
       var info = {},
           leftPoint, startPoint, endPoint,
           leftRange, rightRange;
@@ -269,8 +273,6 @@ define([
 
       self.lastRange = rng;
       self.lastRange.select();
-
-      context.invoke('editor.afterCommand');
 
       return self.lastRange;
     };
