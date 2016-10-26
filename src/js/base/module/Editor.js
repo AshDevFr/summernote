@@ -77,6 +77,7 @@ define([
       // - see: https://goo.gl/4bfIvA
       var changeEventName = agent.isMSIE ? 'DOMCharacterDataModified DOMSubtreeModified DOMNodeInserted' : 'input';
       $editable.on(changeEventName, func.debounce(function () {
+        history.recordUndo();
         context.triggerEvent('change', $editable.html());
       }, 250));
 
