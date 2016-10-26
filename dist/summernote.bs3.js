@@ -1,12 +1,12 @@
 /**
- * Super simple wysiwyg editor v0.8.40
+ * Super simple wysiwyg editor v0.8.41
  * http://summernote.org/
  *
  * summernote.js
  * Copyright 2013-2016 Alan Hong. and other contributors
  * summernote may be freely distributed under the MIT license./
  *
- * Date: 2016-10-20T17:37Z
+ * Date: 2016-10-26T21:21Z
  */
 (function (factory) {
   /* global define */
@@ -3820,6 +3820,7 @@
       // - see: https://goo.gl/4bfIvA
       var changeEventName = agent.isMSIE ? 'DOMCharacterDataModified DOMSubtreeModified DOMNodeInserted' : 'input';
       $editable.on(changeEventName, func.debounce(function () {
+        history.recordUndo();
         context.triggerEvent('change', $editable.html());
       }, 250));
 
@@ -6552,7 +6553,7 @@
 
       var body = [
         '<p class="text-center">',
-        '<a href="http://summernote.org/" target="_blank">Summernote 0.8.40</a> · ',
+        '<a href="http://summernote.org/" target="_blank">Summernote 0.8.41</a> · ',
         '<a href="https://github.com/summernote/summernote" target="_blank">Project</a> · ',
         '<a href="https://github.com/summernote/summernote/issues" target="_blank">Issues</a>',
         '</p>'
@@ -6897,7 +6898,7 @@
 
 
   $.summernote = $.extend($.summernote, {
-    version: '0.8.40',
+    version: '0.8.41',
     ui: ui,
     dom: dom,
 
