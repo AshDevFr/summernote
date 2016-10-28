@@ -7,7 +7,7 @@ define([
 ], function (func, list, dom, range, key) {
   var AutoLink = function (context) {
     var self = this;
-    var linkPattern = /^((http|https|ftp|mailto):\/\/[^\s\.]+)$/,
+    var linkPattern = /^((http|https|ftp|mailto):\/\/([^\s\.\/]+\.){1,2}([^\s\.\/]+)([^\s\.]*))$/,
         httpPattern = /^(www\.\w+\.[a-z]{2,3}[\w+\/\?\=]*)$/;
 
     this.events = {
