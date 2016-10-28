@@ -1,12 +1,12 @@
 /**
- * Super simple wysiwyg editor v0.8.41
+ * Super simple wysiwyg editor v0.8.42
  * http://summernote.org/
  *
  * summernote.js
  * Copyright 2013-2016 Alan Hong. and other contributors
  * summernote may be freely distributed under the MIT license./
  *
- * Date: 2016-10-26T21:21Z
+ * Date: 2016-10-28T21:14Z
  */
 (function (factory) {
   /* global define */
@@ -5113,7 +5113,7 @@
 
   var AutoLink = function (context) {
     var self = this;
-    var linkPattern = /^((http|https|ftp|mailto):\/\/[^\s\.]+)$/,
+    var linkPattern = /^((http|https|ftp|mailto):\/\/([^\s\.\/]+\.){1,2}([^\s\.\/]+)([^\s\.]*))$/,
         httpPattern = /^(www\.\w+\.[a-z]{2,3}[\w+\/\?\=]*)$/;
 
     this.events = {
@@ -6553,7 +6553,7 @@
 
       var body = [
         '<p class="text-center">',
-        '<a href="http://summernote.org/" target="_blank">Summernote 0.8.41</a> · ',
+        '<a href="http://summernote.org/" target="_blank">Summernote 0.8.42</a> · ',
         '<a href="https://github.com/summernote/summernote" target="_blank">Project</a> · ',
         '<a href="https://github.com/summernote/summernote/issues" target="_blank">Issues</a>',
         '</p>'
@@ -6898,7 +6898,7 @@
 
 
   $.summernote = $.extend($.summernote, {
-    version: '0.8.41',
+    version: '0.8.42',
     ui: ui,
     dom: dom,
 
