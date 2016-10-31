@@ -42,7 +42,7 @@ define([
      * @return {Object}
      */
     this.fromNode = function ($node) {
-      var properties = ['font-family', 'font-size', 'text-align', 'list-style-type', 'line-height', 'color'];
+      var properties = ['font-family', 'font-size', 'text-align', 'list-style-type', 'line-height', 'color', 'background-color'];
       var styleInfo = jQueryCSS($node, properties) || {};
       styleInfo['font-size'] = parseInt(styleInfo['font-size'], 10);
       return styleInfo;
