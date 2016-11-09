@@ -537,6 +537,10 @@ define([
      * @return {BoundaryPoint}
      */
     var prevPoint = function (point, isSkipInnerOffset) {
+      if (!point.node) {
+        return null;
+      }
+
       var node, offset;
 
       if (point.offset === 0) {
@@ -568,6 +572,10 @@ define([
      * @return {BoundaryPoint}
      */
     var nextPoint = function (point, isSkipInnerOffset) {
+      if (!point.node) {
+        return null;
+      }
+
       var node, offset;
 
       if (nodeLength(point.node) === point.offset) {
