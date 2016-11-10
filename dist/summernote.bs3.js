@@ -1,12 +1,12 @@
 /**
- * Super simple wysiwyg editor v0.8.43
+ * Super simple wysiwyg editor v0.8.44
  * http://summernote.org/
  *
  * summernote.js
  * Copyright 2013-2016 Alan Hong. and other contributors
  * summernote may be freely distributed under the MIT license./
  *
- * Date: 2016-10-31T23:28Z
+ * Date: 2016-11-10T18:20Z
  */
 (function (factory) {
   /* global define */
@@ -998,6 +998,10 @@
      * @return {BoundaryPoint}
      */
     var prevPoint = function (point, isSkipInnerOffset) {
+      if (!point.node) {
+        return null;
+      }
+
       var node, offset;
 
       if (point.offset === 0) {
@@ -1029,6 +1033,10 @@
      * @return {BoundaryPoint}
      */
     var nextPoint = function (point, isSkipInnerOffset) {
+      if (!point.node) {
+        return null;
+      }
+
       var node, offset;
 
       if (nodeLength(point.node) === point.offset) {
@@ -3574,7 +3582,7 @@
 
         var headList = isEscapseToBody ? dom.lastAncestor(head, dom.isList) :
                                          head.parentNode;
-        var lastList = headList.childNodes && headList.childNodes.length > 1 ? dom.splitTree(headList, {
+        var lastList = headList && headList.childNodes && headList.childNodes.length > 1 ? dom.splitTree(headList, {
           node: last.parentNode,
           offset: dom.position(last) + 1
         }, {
@@ -6553,7 +6561,7 @@
 
       var body = [
         '<p class="text-center">',
-        '<a href="http://summernote.org/" target="_blank">Summernote 0.8.43</a> · ',
+        '<a href="http://summernote.org/" target="_blank">Summernote 0.8.44</a> · ',
         '<a href="https://github.com/summernote/summernote" target="_blank">Project</a> · ',
         '<a href="https://github.com/summernote/summernote/issues" target="_blank">Issues</a>',
         '</p>'
@@ -6898,7 +6906,7 @@
 
 
   $.summernote = $.extend($.summernote, {
-    version: '0.8.43',
+    version: '0.8.44',
     ui: ui,
     dom: dom,
 
