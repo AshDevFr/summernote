@@ -1,12 +1,12 @@
 /**
- * Super simple wysiwyg editor v0.8.44
+ * Super simple wysiwyg editor v0.8.45
  * http://summernote.org/
  *
  * summernote.js
  * Copyright 2013-2016 Alan Hong. and other contributors
  * summernote may be freely distributed under the MIT license./
  *
- * Date: 2016-11-10T18:20Z
+ * Date: 2016-11-15T00:38Z
  */
 (function (factory) {
   /* global define */
@@ -1193,9 +1193,9 @@
     var fromOffsetPath = function (ancestor, offsets) {
       var current = ancestor;
       for (var i = 0, len = offsets.length; i < len; i++) {
-        if (current.childNodes.length <= offsets[i]) {
+        if (current && current.childNodes && current.childNodes.length <= offsets[i]) {
           current = current.childNodes[current.childNodes.length - 1];
-        } else {
+        } else if (current && current.childNodes) {
           current = current.childNodes[offsets[i]];
         }
       }
@@ -5213,10 +5213,10 @@
       var splitFn = deep ? splitPointDeep : splitPoint,
           info = splitFn(rng.getStartPoint());
 
-      if (info.rightNode && info.rightNode.parentNode) {
+      if (info && info.rightNode && info.rightNode.parentNode) {
         info.rightNode.parentNode.insertBefore(node, info.rightNode);
       } else {
-        if (!info.container || !self.isAncestor(info.container, editable)) {
+        if (!info || !info.container || !self.isAncestor(info.container, editable)) {
           editable.appendChild(node);
         } else {
           info.container.appendChild(node);
@@ -5256,7 +5256,7 @@
           if (info.rightNode && info.rightNode.parentNode) {
             info.rightNode.parentNode.insertBefore(childNode, info.rightNode);
           } else {
-            if (!info.container || !self.isAncestor(info.container, editable)) {
+            if (!info || !info.container || !self.isAncestor(info.container, editable)) {
               editable.appendChild(childNode);
             } else {
               info.container.appendChild(childNode);
@@ -5353,17 +5353,19 @@
 
       var info = {},
           leftPoint, startPoint, endPoint,
-          leftRange, rightRange;
+          leftRange, rightRange,
+          fullPara = false;
       if (rng.sc === rng.ec && rng.so === rng.eo) {
         info.left = splitPointDeep(rng.getStartPoint());
       } else {
+        fullPara = true;
         startPoint = rng.getStartPoint();
         endPoint = rng.getEndPoint();
         if (startPoint.node === endPoint.node) {
           endPoint.offset -= startPoint.offset;
         }
         info.left = splitPointDeep(startPoint);
-        if (info.left.rightNode) {
+        if (info.left && info.left.rightNode) {
           leftRange = range.createFromNodeBefore(info.left.rightNode);
           leftPoint = dom.prevPoint(leftRange.getStartPoint());
           if (leftPoint) {
@@ -5380,19 +5382,15 @@
           if (leftPoint) {
             rightRange = range.create(leftPoint.node, leftPoint.offset, leftPoint.node, leftPoint.offset);
           }
-        } else {
-          rightRange = self.moveCursorToEnd();
         }
-      } else if (!leftRange) {
-        leftRange = self.moveCursorToEnd();
       }
 
-      if (rightRange) {
-        startPoint = leftRange.getStartPoint();
-        endPoint = rightRange.getStartPoint();
+      if (fullPara) {
+        startPoint = (leftRange || rng).getStartPoint();
+        endPoint = (rightRange || rng).getEndPoint();
         rng = range.create(startPoint.node, startPoint.offset, endPoint.node, endPoint.offset);
       } else {
-        startPoint = leftRange.getStartPoint();
+        startPoint = (leftRange || rng).getStartPoint();
         rng = range.create(startPoint.node, startPoint.offset, startPoint.node, startPoint.offset);
       }
 
@@ -5449,8 +5447,8 @@
       var nodes = rng.nodes().filter(function (node) {
         if (node.parentNode && node.parentNode.childNodes && dom.position(node) > 0) {
           return isWrappable(node) && !isWrappable(node.parentNode.childNodes[dom.position(node) - 1]);
-        } else {
-          return isWrappable(node);
+        } else if (node.parentNode && node.parentNode.childNodes) {
+          return isWrappable(node) && node.parentNode.childNodes.length !== 1;
         }
       });
 
@@ -5550,7 +5548,8 @@
           node: node.parentNode,
           offset: dom.position(node)
         };
-        return dom.isBR(node) && !isPara(node.parentNode) && (!dom.isLeftEdgePoint(point) || !dom.isRightEdgePoint(point));
+        return dom.isBR(node) && !isPara(node.parentNode) && !dom.isEditable(node.parentNode) &&
+          (!dom.isLeftEdgePoint(point) || !dom.isRightEdgePoint(point));
       });
 
       if (!nodes || !nodes.length) {
@@ -5716,6 +5715,9 @@
     }
 
     function splitPointDeep(point) {
+      if (dom.isEditable(point.node)) {
+        return;
+      }
       var leftPoint = dom.prevPointUntil(point, function (newPoint) {
         return !dom.isLeftEdgePoint(newPoint) || (dom.isLeftEdgePoint(newPoint) && newPoint.node === editable);
       });
@@ -5724,8 +5726,14 @@
       });
 
       if (leftPoint && !dom.isSamePoint(leftPoint, point)) {
+        if (dom.isEditable(leftPoint.node)) {
+          return;
+        }
         point = leftPoint;
       } else if (rightPoint && !dom.isSamePoint(rightPoint, point)) {
+        if (dom.isEditable(rightPoint.node)) {
+          return;
+        }
         point = rightPoint;
       }
 
@@ -5771,7 +5779,7 @@
     }
 
     function isPara(node) {
-      return dom.isPara(node) || dom.isBlockquote(node);
+      return dom.isPara(node) || dom.isBlockquote(node) || dom.isList(node);
     }
 
     function saveRng(rng) {
@@ -5875,7 +5883,7 @@
   };
 
   $.summernote = $.extend($.summernote, {
-    version: '0.8.44',
+    version: '0.8.45',
     ui: ui,
     dom: dom,
 
