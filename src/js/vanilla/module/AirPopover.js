@@ -196,15 +196,17 @@ define([
     };
 
     this.removeFormat = function (rng) {
-      removeFormat(rng, function (node) {
+      rng = removeFormat(rng, function (node) {
         return node && /^BACKQUOTE|^A|^LI|^UL|^EM|^B|^I|^STRONG|^H[1-7]/.test(node.nodeName.toUpperCase());
-      });
+      }, false);
+      rng.select();
+      context.invoke('editor.removeFormat');
     };
 
     this.unquote = function (rng) {
       rng = self.getFullParaRange(rng);
       rng = self.createPara(rng);
-      removeFormat(rng, dom.isBlockquote);
+      removeFormat(rng, dom.isBlockquote, true);
     };
 
     this.insertOrderedList = function (rng) {
@@ -522,7 +524,7 @@ define([
       }
     }
 
-    function removeFormat(rng, pred) {
+    function removeFormat(rng, pred, formatBlock) {
       if (!pred) {
         return;
       }
@@ -531,28 +533,41 @@ define([
         $editable.focus();
       }
       rng = rng || self.lastRange || range.create(editable);
+      var rngSave = saveRng(rng);
 
       context.invoke('editor.beforeCommand');
 
       if (rng.sc !== rng.ec) {
         $.each(list.from(rng.nodes()), removeFormatNode);
       } else {
-        removeFormatNode(rng.sc);
+        removeFormatNode(null, rng.sc);
       }
 
       context.invoke('editor.afterCommand');
 
+      return restoreRng(rngSave);
+
       function removeFormatNode(idx, rangeNode) {
-        var ancestors = dom.listAncestor(rangeNode);
-        ancestors.filter(pred).forEach(function (node) {
-          var ancestor = node.parentNode;
+        if (formatBlock) {
+          var ancestors = dom.listAncestor(rangeNode);
+          ancestors.filter(pred).forEach(function (node) {
+            var ancestor = node.parentNode;
+            if (ancestor) {
+              $.each(list.from(node.childNodes), function (idx, child) {
+                ancestor.insertBefore(child, node);
+              });
+              ancestor.removeChild(node);
+            }
+          });
+        } else if (pred(rangeNode)) {
+          var ancestor = rangeNode.parentNode;
           if (ancestor) {
-            $.each(list.from(node.childNodes), function (idx, child) {
-              ancestor.insertBefore(child, node);
+            $.each(list.from(rangeNode.childNodes), function (idx, child) {
+              ancestor.insertBefore(child, rangeNode);
             });
-            ancestor.removeChild(node);
+            ancestor.removeChild(rangeNode);
           }
-        });
+        }
       }
     }
 
