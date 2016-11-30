@@ -225,6 +225,7 @@ define([
       rng = self.createPara(rng);
       rng = unWrapBR(rng);
       rng = normalizePara(rng);
+      rng = unWrapPara(rng);
       rng.select();
       context.invoke('editor.' + command);
     };
@@ -430,6 +431,45 @@ define([
         }
 
         return node;
+      }
+    }
+
+    function unWrapPara(rng) {
+      if (!$editable.is(':focus')) {
+        $editable.focus();
+      }
+      rng = rng || self.lastRange || range.create(editable);
+      var rngSave = saveRng(rng);
+
+      var nodes = rng.nodes().filter(function (node) {
+        return dom.isDiv(node) && !dom.isEditable(node) &&
+          node.childNodes && list.from(node.childNodes).filter(function (node) {
+            return dom.isPara(node) || dom.isVoid(node);
+          }).length === node.childNodes.length;
+      });
+
+      return processParaNodes(nodes);
+
+      function processParaNodes(nodes) {
+        nodes.forEach(function (node) {
+          var ancestor = node.parentNode;
+          if (ancestor) {
+            if (node === rngSave.prevPoint.node) {
+              rngSave.prevPoint.node = ancestor;
+              rngSave.prevPoint.offset += dom.position(node);
+            }
+            if (node === rngSave.nextPoint.node) {
+              rngSave.nextPoint.node = ancestor;
+              rngSave.nextPoint.offset += dom.position(node);
+            }
+            list.from(node.childNodes).forEach(function (child) {
+              ancestor.insertBefore(child, node);
+            });
+            ancestor.removeChild(node);
+          }
+        });
+
+        return restoreRng(rngSave);
       }
     }
 
