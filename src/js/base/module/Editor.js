@@ -801,6 +801,8 @@ define([
       }
 
       $target.css(imageSize);
+      $target.attr('width', Math.floor(imageSize.width));
+      $target.attr('height', Math.floor(imageSize.height));
     };
 
     /**
