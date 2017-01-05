@@ -551,6 +551,9 @@ define([
         node = point.node.parentNode;
         offset = position(point.node);
       } else if (hasChildren(point.node)) {
+        if (point.node.childNodes.length < point.offset) {
+          point.offset = point.node.childNodes.length;
+        }
         node = point.node.childNodes[point.offset - 1];
         offset = nodeLength(node);
       } else {

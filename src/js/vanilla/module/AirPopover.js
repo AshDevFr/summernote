@@ -593,6 +593,14 @@ define([
           ancestors.filter(pred).forEach(function (node) {
             var ancestor = node.parentNode;
             if (ancestor) {
+              if (node === rngSave.prevPoint.node) {
+                rngSave.prevPoint.node = ancestor;
+                rngSave.prevPoint.offset += dom.position(node);
+              }
+              if (node === rngSave.nextPoint.node) {
+                rngSave.nextPoint.node = ancestor;
+                rngSave.nextPoint.offset += dom.position(node);
+              }
               $.each(list.from(node.childNodes), function (idx, child) {
                 ancestor.insertBefore(child, node);
               });
@@ -602,6 +610,14 @@ define([
         } else if (pred(rangeNode)) {
           var ancestor = rangeNode.parentNode;
           if (ancestor) {
+            if (rangeNode === rngSave.prevPoint.node) {
+              rngSave.prevPoint.node = ancestor;
+              rngSave.prevPoint.offset += dom.position(rangeNode);
+            }
+            if (rangeNode === rngSave.nextPoint.node) {
+              rngSave.nextPoint.node = ancestor;
+              rngSave.nextPoint.offset += dom.position(rangeNode);
+            }
             $.each(list.from(rangeNode.childNodes), function (idx, child) {
               ancestor.insertBefore(child, rangeNode);
             });
