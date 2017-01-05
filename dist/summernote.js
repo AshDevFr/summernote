@@ -1,12 +1,12 @@
 /**
- * Super simple wysiwyg editor v0.8.50
+ * Super simple wysiwyg editor v0.8.51
  * http://summernote.org/
  *
  * summernote.js
  * Copyright 2013-2016 Alan Hong. and other contributors
  * summernote may be freely distributed under the MIT license./
  *
- * Date: 2016-12-28T00:54Z
+ * Date: 2017-01-05T23:23Z
  */
 (function (factory) {
   /* global define */
@@ -1012,6 +1012,9 @@
         node = point.node.parentNode;
         offset = position(point.node);
       } else if (hasChildren(point.node)) {
+        if (point.node.childNodes.length < point.offset) {
+          point.offset = point.node.childNodes.length;
+        }
         node = point.node.childNodes[point.offset - 1];
         offset = nodeLength(node);
       } else {
@@ -5700,6 +5703,14 @@
           ancestors.filter(pred).forEach(function (node) {
             var ancestor = node.parentNode;
             if (ancestor) {
+              if (node === rngSave.prevPoint.node) {
+                rngSave.prevPoint.node = ancestor;
+                rngSave.prevPoint.offset += dom.position(node);
+              }
+              if (node === rngSave.nextPoint.node) {
+                rngSave.nextPoint.node = ancestor;
+                rngSave.nextPoint.offset += dom.position(node);
+              }
               $.each(list.from(node.childNodes), function (idx, child) {
                 ancestor.insertBefore(child, node);
               });
@@ -5709,6 +5720,14 @@
         } else if (pred(rangeNode)) {
           var ancestor = rangeNode.parentNode;
           if (ancestor) {
+            if (rangeNode === rngSave.prevPoint.node) {
+              rngSave.prevPoint.node = ancestor;
+              rngSave.prevPoint.offset += dom.position(rangeNode);
+            }
+            if (rangeNode === rngSave.nextPoint.node) {
+              rngSave.nextPoint.node = ancestor;
+              rngSave.nextPoint.offset += dom.position(rangeNode);
+            }
             $.each(list.from(rangeNode.childNodes), function (idx, child) {
               ancestor.insertBefore(child, rangeNode);
             });
@@ -5940,7 +5959,7 @@
   };
 
   $.summernote = $.extend($.summernote, {
-    version: '0.8.50',
+    version: '0.8.51',
     ui: ui,
     dom: dom,
 
