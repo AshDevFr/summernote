@@ -25,22 +25,22 @@ define([
     };
 
     this.initialize = function () {
-      this.lastWordRange = null;
+      self.lastWordRange = null;
     };
 
     this.replace = function (node) {
       if (node) {
-        this.lastWordRange.insertNode(node);
+        self.lastWordRange.insertNode(node);
         range.createFromNode(node).collapse().select();
 
-        this.lastWordRange = null;
+        self.lastWordRange = null;
         context.invoke('editor.focus');
       }
 
     };
 
     this.getLastWordRange = function () {
-      return this.lastWordRange;
+      return self.lastWordRange;
     };
 
     this.searchKeyword = function (index, keyword, callback) {
@@ -68,7 +68,7 @@ define([
         if (hints.length && keyword) {
           var bnd = func.rect2bnd(list.last(wordRange.getClientRects()));
           if (bnd) {
-            this.lastWordRange = wordRange;
+            self.lastWordRange = wordRange;
 
             hints.forEach(function (hint, idx) {
               if (typeof hint.callback === 'function' && hint.match.test(keyword)) {

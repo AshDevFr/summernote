@@ -14,14 +14,17 @@ define([
 
     var options = context.options;
 
+    var handleUpdate = func.throttle(function () {
+      self.update();
+      self.setLastRange();
+    }, 250);
+
     this.events = {
       'summernote.keyup summernote.mouseup summernote.scroll': function () {
-        self.update();
-        self.setLastRange();
+        handleUpdate();
       },
       'summernote.change summernote.dialog.shown': function () {
-        self.update();
-        self.setLastRange();
+        handleUpdate();
       },
       'summernote.focusout': function (we, e) {
         // [workaround] Firefox doesn't support relatedTarget on focusout
@@ -48,8 +51,7 @@ define([
       });
 
       function mouseUp() {
-        self.update();
-        self.setLastRange();
+        handleUpdate();
 
         $document.off('mouseup');
         $(window).off('mouseup');
