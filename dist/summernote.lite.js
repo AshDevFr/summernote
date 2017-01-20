@@ -1,12 +1,12 @@
 /**
- * Super simple wysiwyg editor v0.8.51
+ * Super simple wysiwyg editor v0.8.52
  * http://summernote.org/
  *
  * summernote.js
  * Copyright 2013-2016 Alan Hong. and other contributors
  * summernote may be freely distributed under the MIT license./
  *
- * Date: 2017-01-05T23:23Z
+ * Date: 2017-01-20T17:02Z
  */
 (function (factory) {
   /* global define */
@@ -169,6 +169,59 @@
       };
     };
 
+    var getNow = Date.now || function () {
+        return new Date().getTime();
+      };
+
+    var throttle = function (func, wait, options) {
+      var timeout, context, args, result;
+      var previous = 0;
+      if (!options) {
+        options = {};
+      }
+
+      var later = function () {
+        previous = options.leading === false ? 0 : getNow();
+        timeout = null;
+        result = func.apply(context, args);
+        if (!timeout) {
+          context = args = null;
+        }
+      };
+
+      var throttled = function () {
+        var now = getNow();
+        if (!previous && options.leading === false) {
+          previous = now;
+        }
+        var remaining = wait - (now - previous);
+        context = this;
+        args = arguments;
+        if (remaining <= 0 || remaining > wait) {
+          if (timeout) {
+            clearTimeout(timeout);
+            timeout = null;
+          }
+          previous = now;
+          result = func.apply(context, args);
+          if (!timeout) {
+            context = args = null;
+          }
+        } else if (!timeout && options.trailing !== false) {
+          timeout = setTimeout(later, remaining);
+        }
+        return result;
+      };
+
+      throttled.cancel = function () {
+        clearTimeout(timeout);
+        previous = 0;
+        timeout = context = args = null;
+      };
+
+      return throttled;
+    };
+
     return {
       eq: eq,
       eq2: eq2,
@@ -183,7 +236,8 @@
       rect2bnd: rect2bnd,
       invertObject: invertObject,
       namespaceToCamel: namespaceToCamel,
-      debounce: debounce
+      debounce: debounce,
+      throttle: throttle
     };
   })();
 
@@ -4457,7 +4511,7 @@
   };
 
   $.summernote = $.extend($.summernote, {
-    version: '0.8.51',
+    version: '0.8.52',
     ui: ui,
 
     options: {
