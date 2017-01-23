@@ -1,12 +1,12 @@
 /**
- * Super simple wysiwyg editor v0.8.52
+ * Super simple wysiwyg editor v0.8.53
  * http://summernote.org/
  *
  * summernote.js
  * Copyright 2013-2016 Alan Hong. and other contributors
  * summernote may be freely distributed under the MIT license./
  *
- * Date: 2017-01-20T17:02Z
+ * Date: 2017-01-23T23:32Z
  */
 (function (factory) {
   /* global define */
@@ -3573,7 +3573,16 @@
     /**
      * insert paragraph
      */
-    this.insertParagraph = function (editable) {
+    this.insertParagraph = function (editable, pred) {
+      var predicat = dom.isPara;
+      if (pred) {
+        predicat = function (node) {
+          if (dom.isEditable(node)) {
+            return false;
+          }
+          return pred(node);
+        };
+      }
       var rng = range.create(editable);
 
       // deleteContents on range.
@@ -3583,7 +3592,7 @@
       rng = rng.wrapBodyInlineWithPara();
 
       // finding paragraph
-      var splitRoot = dom.ancestor(rng.sc, dom.isPara);
+      var splitRoot = dom.ancestor(rng.sc, predicat);
 
       var nextPara;
       // on paragraph: split paragraph
@@ -3975,8 +3984,8 @@
     /**
      * insert paragraph
      */
-    this.insertParagraph = this.wrapCommand(function () {
-      typing.insertParagraph(editable);
+    this.insertParagraph = this.wrapCommand(function (pred) {
+      typing.insertParagraph(editable, pred);
     });
     context.memo('help.insertParagraph', lang.help.insertParagraph);
 
@@ -5264,6 +5273,29 @@
       return self.lastRange;
     };
 
+    this.update = function (force) {
+      if (force) {
+        handleUpdate.cancel();
+      }
+      var styleInfo = context.invoke('editor.currentStyle');
+      if (styleInfo.range && (!styleInfo.range.isCollapsed() || force)) {
+        var rect = list.last(styleInfo.range.getClientRects());
+        var bnd;
+        if (rect) {
+          bnd = func.rect2bnd(rect);
+          options.popover.air.update(styleInfo, bnd);
+        } else if (force) {
+          options.popover.air.update(styleInfo, null);
+        }
+      } else {
+        this.hide();
+      }
+    };
+
+    this.hide = function () {
+      options.popover.air.hide();
+    };
+
     this.insertNode = function (node, rng, deep) {
       context.invoke('editor.beforeCommand');
       if (!$editable.is(':focus')) {
@@ -5330,26 +5362,6 @@
         self.lastRange.select();
       }
       context.invoke('editor.afterCommand');
-    };
-
-    this.update = function (force) {
-      var styleInfo = context.invoke('editor.currentStyle');
-      if (styleInfo.range && (!styleInfo.range.isCollapsed() || force)) {
-        var rect = list.last(styleInfo.range.getClientRects());
-        var bnd;
-        if (rect) {
-          bnd = func.rect2bnd(rect);
-          options.popover.air.update(styleInfo, bnd);
-        } else if (force) {
-          options.popover.air.update(styleInfo, null);
-        }
-      } else {
-        this.hide();
-      }
-    };
-
-    this.hide = function () {
-      options.popover.air.hide();
     };
 
     this.isAncestor = function (node, parentNode) {
@@ -6015,7 +6027,7 @@
   };
 
   $.summernote = $.extend($.summernote, {
-    version: '0.8.52',
+    version: '0.8.53',
     ui: ui,
     dom: dom,
 

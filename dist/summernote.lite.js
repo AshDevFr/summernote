@@ -1,12 +1,12 @@
 /**
- * Super simple wysiwyg editor v0.8.52
+ * Super simple wysiwyg editor v0.8.53
  * http://summernote.org/
  *
  * summernote.js
  * Copyright 2013-2016 Alan Hong. and other contributors
  * summernote may be freely distributed under the MIT license./
  *
- * Date: 2017-01-20T17:02Z
+ * Date: 2017-01-23T23:32Z
  */
 (function (factory) {
   /* global define */
@@ -3548,7 +3548,16 @@
     /**
      * insert paragraph
      */
-    this.insertParagraph = function (editable) {
+    this.insertParagraph = function (editable, pred) {
+      var predicat = dom.isPara;
+      if (pred) {
+        predicat = function (node) {
+          if (dom.isEditable(node)) {
+            return false;
+          }
+          return pred(node);
+        };
+      }
       var rng = range.create(editable);
 
       // deleteContents on range.
@@ -3558,7 +3567,7 @@
       rng = rng.wrapBodyInlineWithPara();
 
       // finding paragraph
-      var splitRoot = dom.ancestor(rng.sc, dom.isPara);
+      var splitRoot = dom.ancestor(rng.sc, predicat);
 
       var nextPara;
       // on paragraph: split paragraph
@@ -3950,8 +3959,8 @@
     /**
      * insert paragraph
      */
-    this.insertParagraph = this.wrapCommand(function () {
-      typing.insertParagraph(editable);
+    this.insertParagraph = this.wrapCommand(function (pred) {
+      typing.insertParagraph(editable, pred);
     });
     context.memo('help.insertParagraph', lang.help.insertParagraph);
 
@@ -4511,7 +4520,7 @@
   };
 
   $.summernote = $.extend($.summernote, {
-    version: '0.8.52',
+    version: '0.8.53',
     ui: ui,
 
     options: {
