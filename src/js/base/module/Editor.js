@@ -309,8 +309,8 @@ define([
     /**
      * insert paragraph
      */
-    this.insertParagraph = this.wrapCommand(function () {
-      typing.insertParagraph(editable);
+    this.insertParagraph = this.wrapCommand(function (pred) {
+      typing.insertParagraph(editable, pred);
     });
     context.memo('help.insertParagraph', lang.help.insertParagraph);
 

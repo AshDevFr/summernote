@@ -33,7 +33,16 @@ define([
     /**
      * insert paragraph
      */
-    this.insertParagraph = function (editable) {
+    this.insertParagraph = function (editable, pred) {
+      var predicat = dom.isPara;
+      if (pred) {
+        predicat = function (node) {
+          if (dom.isEditable(node)) {
+            return false;
+          }
+          return pred(node);
+        };
+      }
       var rng = range.create(editable);
 
       // deleteContents on range.
@@ -43,7 +52,7 @@ define([
       rng = rng.wrapBodyInlineWithPara();
 
       // finding paragraph
-      var splitRoot = dom.ancestor(rng.sc, dom.isPara);
+      var splitRoot = dom.ancestor(rng.sc, predicat);
 
       var nextPara;
       // on paragraph: split paragraph
