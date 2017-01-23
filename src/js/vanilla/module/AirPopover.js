@@ -100,6 +100,29 @@ define([
       return self.lastRange;
     };
 
+    this.update = function (force) {
+      if (force) {
+        handleUpdate.cancel();
+      }
+      var styleInfo = context.invoke('editor.currentStyle');
+      if (styleInfo.range && (!styleInfo.range.isCollapsed() || force)) {
+        var rect = list.last(styleInfo.range.getClientRects());
+        var bnd;
+        if (rect) {
+          bnd = func.rect2bnd(rect);
+          options.popover.air.update(styleInfo, bnd);
+        } else if (force) {
+          options.popover.air.update(styleInfo, null);
+        }
+      } else {
+        this.hide();
+      }
+    };
+
+    this.hide = function () {
+      options.popover.air.hide();
+    };
+
     this.insertNode = function (node, rng, deep) {
       context.invoke('editor.beforeCommand');
       if (!$editable.is(':focus')) {
@@ -166,26 +189,6 @@ define([
         self.lastRange.select();
       }
       context.invoke('editor.afterCommand');
-    };
-
-    this.update = function (force) {
-      var styleInfo = context.invoke('editor.currentStyle');
-      if (styleInfo.range && (!styleInfo.range.isCollapsed() || force)) {
-        var rect = list.last(styleInfo.range.getClientRects());
-        var bnd;
-        if (rect) {
-          bnd = func.rect2bnd(rect);
-          options.popover.air.update(styleInfo, bnd);
-        } else if (force) {
-          options.popover.air.update(styleInfo, null);
-        }
-      } else {
-        this.hide();
-      }
-    };
-
-    this.hide = function () {
-      options.popover.air.hide();
     };
 
     this.isAncestor = function (node, parentNode) {
