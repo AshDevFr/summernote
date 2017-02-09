@@ -128,6 +128,9 @@ define([
         if (agent.isW3CRangeSupport) {
           var w3cRange = document.createRange();
           w3cRange.setStart(sc, so);
+          if (eo > dom.nodeLength(ec)) {
+            eo = dom.nodeLength(ec);
+          }
           w3cRange.setEnd(ec, eo);
 
           return w3cRange;
