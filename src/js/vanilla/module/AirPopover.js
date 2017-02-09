@@ -559,7 +559,8 @@ define([
             node: node.parentNode,
             offset: dom.position(node)
           };
-          return dom.isBR(node) && !isPara(node.parentNode) && (!dom.isLeftEdgePoint(point) || !dom.isRightEdgePoint(point));
+          return dom.isBR(node) && !isPara(node.parentNode) && !dom.isEditable(node.parentNode) &&
+            (!dom.isLeftEdgePoint(point) || !dom.isRightEdgePoint(point));
         });
 
         if (nodes && nodes.length) {
