@@ -1,12 +1,12 @@
 /**
- * Super simple wysiwyg editor v0.8.54
+ * Super simple wysiwyg editor v0.8.55
  * http://summernote.org/
  *
  * summernote.js
  * Copyright 2013-2016 Alan Hong. and other contributors
  * summernote may be freely distributed under the MIT license./
  *
- * Date: 2017-02-09T23:40Z
+ * Date: 2017-03-16T22:16Z
  */
 (function (factory) {
   /* global define */
@@ -3351,15 +3351,15 @@
     /**
      * toggle ordered list
      */
-    this.insertOrderedList = function (editable) {
-      this.toggleList('OL', editable);
+    this.insertOrderedList = function (editable, rng) {
+      this.toggleList('OL', editable, rng);
     };
 
     /**
      * toggle unordered list
      */
-    this.insertUnorderedList = function (editable) {
-      this.toggleList('UL', editable);
+    this.insertUnorderedList = function (editable, rng) {
+      this.toggleList('UL', editable, rng);
     };
 
     /**
@@ -3420,8 +3420,8 @@
      *
      * @param {String} listName - OL or UL
      */
-    this.toggleList = function (listName, editable) {
-      var rng = range.create(editable).wrapBodyInlineWithPara();
+    this.toggleList = function (listName, editable, rng) {
+      rng = (rng || range.create(editable)).wrapBodyInlineWithPara();
 
       var paras = rng.nodes(dom.isPara, { includeAncestor: true });
       var bookmark = rng.paraBookmark(paras);
@@ -3992,13 +3992,13 @@
     });
     context.memo('help.insertParagraph', lang.help.insertParagraph);
 
-    this.insertOrderedList = this.wrapCommand(function () {
-      bullet.insertOrderedList(editable);
+    this.insertOrderedList = this.wrapCommand(function (rng) {
+      bullet.insertOrderedList(editable, rng);
     });
     context.memo('help.insertOrderedList', lang.help.insertOrderedList);
 
-    this.insertUnorderedList = this.wrapCommand(function () {
-      bullet.insertUnorderedList(editable);
+    this.insertUnorderedList = this.wrapCommand(function (rng) {
+      bullet.insertUnorderedList(editable, rng);
     });
     context.memo('help.insertUnorderedList', lang.help.insertUnorderedList);
 
@@ -5407,8 +5407,9 @@
       rng = unWrapBR(rng);
       rng = normalizePara(rng);
       rng = unWrapPara(rng);
+      rng = wrapVoid(rng);
       rng.select();
-      context.invoke('editor.' + command);
+      context.invoke('editor.' + command, rng);
     };
 
     this.splitPara = function (rng) {
@@ -5613,6 +5614,14 @@
 
         return node;
       }
+    }
+
+    function wrapVoid(rng) {
+      if (rng.sc === rng.ec && rng.so === rng.eo &&
+        dom.isVoid(rng.sc) && rng.sc.parentNode && dom.isEditable(rng.sc.parentNode)) {
+        dom.wrap(rng.sc, 'div');
+      }
+      return rng;
     }
 
     function unWrapPara(rng) {
@@ -6031,7 +6040,7 @@
   };
 
   $.summernote = $.extend($.summernote, {
-    version: '0.8.54',
+    version: '0.8.55',
     ui: ui,
     dom: dom,
 
