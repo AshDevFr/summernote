@@ -314,13 +314,13 @@ define([
     });
     context.memo('help.insertParagraph', lang.help.insertParagraph);
 
-    this.insertOrderedList = this.wrapCommand(function () {
-      bullet.insertOrderedList(editable);
+    this.insertOrderedList = this.wrapCommand(function (rng) {
+      bullet.insertOrderedList(editable, rng);
     });
     context.memo('help.insertOrderedList', lang.help.insertOrderedList);
 
-    this.insertUnorderedList = this.wrapCommand(function () {
-      bullet.insertUnorderedList(editable);
+    this.insertUnorderedList = this.wrapCommand(function (rng) {
+      bullet.insertUnorderedList(editable, rng);
     });
     context.memo('help.insertUnorderedList', lang.help.insertUnorderedList);
 

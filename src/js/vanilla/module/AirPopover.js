@@ -231,8 +231,9 @@ define([
       rng = unWrapBR(rng);
       rng = normalizePara(rng);
       rng = unWrapPara(rng);
+      rng = wrapVoid(rng);
       rng.select();
-      context.invoke('editor.' + command);
+      context.invoke('editor.' + command, rng);
     };
 
     this.splitPara = function (rng) {
@@ -437,6 +438,14 @@ define([
 
         return node;
       }
+    }
+
+    function wrapVoid(rng) {
+      if (rng.sc === rng.ec && rng.so === rng.eo &&
+        dom.isVoid(rng.sc) && rng.sc.parentNode && dom.isEditable(rng.sc.parentNode)) {
+        dom.wrap(rng.sc, 'div');
+      }
+      return rng;
     }
 
     function unWrapPara(rng) {

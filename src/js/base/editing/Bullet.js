@@ -16,15 +16,15 @@ define([
     /**
      * toggle ordered list
      */
-    this.insertOrderedList = function (editable) {
-      this.toggleList('OL', editable);
+    this.insertOrderedList = function (editable, rng) {
+      this.toggleList('OL', editable, rng);
     };
 
     /**
      * toggle unordered list
      */
-    this.insertUnorderedList = function (editable) {
-      this.toggleList('UL', editable);
+    this.insertUnorderedList = function (editable, rng) {
+      this.toggleList('UL', editable, rng);
     };
 
     /**
@@ -85,8 +85,8 @@ define([
      *
      * @param {String} listName - OL or UL
      */
-    this.toggleList = function (listName, editable) {
-      var rng = range.create(editable).wrapBodyInlineWithPara();
+    this.toggleList = function (listName, editable, rng) {
+      rng = (rng || range.create(editable)).wrapBodyInlineWithPara();
 
       var paras = rng.nodes(dom.isPara, { includeAncestor: true });
       var bookmark = rng.paraBookmark(paras);
