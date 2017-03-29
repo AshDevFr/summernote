@@ -16,14 +16,15 @@ define([
 
     var handleUpdate = func.throttle(function () {
       self.update();
-      self.setLastRange();
     }, 250);
 
     this.events = {
       'summernote.keyup summernote.mouseup summernote.scroll': function () {
+        self.setLastRange();
         handleUpdate();
       },
       'summernote.change summernote.dialog.shown': function () {
+        self.setLastRange();
         handleUpdate();
       },
       'summernote.focusout': function (we, e) {
@@ -51,6 +52,7 @@ define([
       });
 
       function mouseUp() {
+        self.setLastRange();
         handleUpdate();
 
         $document.off('mouseup');
