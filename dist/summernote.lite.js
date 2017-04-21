@@ -1,12 +1,12 @@
 /**
- * Super simple wysiwyg editor v0.8.56
+ * Super simple wysiwyg editor v0.8.57
  * http://summernote.org/
  *
  * summernote.js
  * Copyright 2013-2016 Alan Hong. and other contributors
  * summernote may be freely distributed under the MIT license./
  *
- * Date: 2017-03-29T20:32Z
+ * Date: 2017-04-21T19:05Z
  */
 (function (factory) {
   /* global define */
@@ -4348,9 +4348,14 @@
       });
 
       var startRange = range.createFromNodeBefore(list.head(anchors));
-      var startPoint = startRange.getStartPoint();
       var endRange = range.createFromNodeAfter(list.last(anchors));
       var endPoint = endRange.getEndPoint();
+      var startPoint;
+      if (linkInfo.selectAfter) {
+        startPoint = endRange.getEndPoint();
+      } else {
+        startPoint = startRange.getStartPoint();
+      }
 
       range.create(
         startPoint.node,
@@ -4523,7 +4528,7 @@
   };
 
   $.summernote = $.extend($.summernote, {
-    version: '0.8.56',
+    version: '0.8.57',
     ui: ui,
 
     options: {
