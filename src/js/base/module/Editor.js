@@ -695,9 +695,14 @@ define([
       });
 
       var startRange = range.createFromNodeBefore(list.head(anchors));
-      var startPoint = startRange.getStartPoint();
       var endRange = range.createFromNodeAfter(list.last(anchors));
       var endPoint = endRange.getEndPoint();
+      var startPoint;
+      if (linkInfo.selectAfter) {
+        startPoint = endRange.getEndPoint();
+      } else {
+        startPoint = startRange.getStartPoint();
+      }
 
       range.create(
         startPoint.node,
