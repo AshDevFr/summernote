@@ -1,12 +1,12 @@
 /**
- * Super simple wysiwyg editor v0.8.57
+ * Super simple wysiwyg editor v0.8.58
  * http://summernote.org/
  *
  * summernote.js
  * Copyright 2013-2016 Alan Hong. and other contributors
  * summernote may be freely distributed under the MIT license./
  *
- * Date: 2017-04-21T19:05Z
+ * Date: 2017-06-15T23:07Z
  */
 (function (factory) {
   /* global define */
@@ -598,6 +598,10 @@
      * ex) br, col, embed, hr, img, input, ...
      * @see http://www.w3.org/html/wg/drafts/html/master/syntax.html#void-elements
      */
+    var isType = function (node, nodeName) {
+      return node && node.nodeName && node.nodeName.toUpperCase() === nodeName.toUpperCase();
+    };
+
     var isVoid = function (node) {
       return node && node.nodeName && /^BR|^IMG|^HR|^IFRAME|^BUTTON/.test(node.nodeName.toUpperCase());
     };
@@ -1534,6 +1538,7 @@
       isControlSizing: isControlSizing,
       isText: isText,
       isElement: isElement,
+      isType: isType,
       isVoid: isVoid,
       isPara: isPara,
       isPurePara: isPurePara,
@@ -3605,8 +3610,10 @@
       var head = list.head(paras);
       var last = list.last(paras);
 
-      var prevList = dom.isList(head.previousSibling) && head.previousSibling;
-      var nextList = dom.isList(last.nextSibling) && last.nextSibling;
+      var prevList = dom.isList(head.previousSibling) && head.previousSibling &&
+        dom.isType(last.previousSibling, listName);
+      var nextList = dom.isList(last.nextSibling) && last.nextSibling &&
+        dom.isType(last.nextSibling, listName);
 
       var listNode = prevList || dom.insertAfter(dom.create(listName || 'UL'), last);
 
@@ -5197,7 +5204,7 @@
 
   var AutoLink = function (context) {
     var self = this;
-    var linkPattern = /^((http|https|ftp|mailto):\/\/([^\s\.\/]+\.){1,2}(\w+)([\w+\/\?\=\%\(\)]*))$/,
+    var linkPattern = /^((http|https|ftp|mailto):\/\/([^\s\.\/]+\.){1,2}(\w+)([\w+\/\?\=\%\(\)\-\_]*))$/,
         httpPattern = /^(www\.\w+\.[a-z]{2,3}[\w+\/\?\=\%\(\)]*)$/;
 
     this.events = {
@@ -6637,7 +6644,7 @@
 
       var body = [
         '<p class="text-center">',
-        '<a href="http://summernote.org/" target="_blank">Summernote 0.8.57</a> · ',
+        '<a href="http://summernote.org/" target="_blank">Summernote 0.8.58</a> · ',
         '<a href="https://github.com/summernote/summernote" target="_blank">Project</a> · ',
         '<a href="https://github.com/summernote/summernote/issues" target="_blank">Issues</a>',
         '</p>'
@@ -6982,7 +6989,7 @@
 
 
   $.summernote = $.extend($.summernote, {
-    version: '0.8.57',
+    version: '0.8.58',
     ui: ui,
     dom: dom,
 
