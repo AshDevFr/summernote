@@ -128,8 +128,10 @@ define([
       var head = list.head(paras);
       var last = list.last(paras);
 
-      var prevList = dom.isList(head.previousSibling) && head.previousSibling;
-      var nextList = dom.isList(last.nextSibling) && last.nextSibling;
+      var prevList = dom.isList(head.previousSibling) && head.previousSibling &&
+        dom.isType(last.previousSibling, listName);
+      var nextList = dom.isList(last.nextSibling) && last.nextSibling &&
+        dom.isType(last.nextSibling, listName);
 
       var listNode = prevList || dom.insertAfter(dom.create(listName || 'UL'), last);
 

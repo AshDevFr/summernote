@@ -83,6 +83,10 @@ define([
      * ex) br, col, embed, hr, img, input, ...
      * @see http://www.w3.org/html/wg/drafts/html/master/syntax.html#void-elements
      */
+    var isType = function (node, nodeName) {
+      return node && node.nodeName && node.nodeName.toUpperCase() === nodeName.toUpperCase();
+    };
+
     var isVoid = function (node) {
       return node && node.nodeName && /^BR|^IMG|^HR|^IFRAME|^BUTTON/.test(node.nodeName.toUpperCase());
     };
@@ -1019,6 +1023,7 @@ define([
       isControlSizing: isControlSizing,
       isText: isText,
       isElement: isElement,
+      isType: isType,
       isVoid: isVoid,
       isPara: isPara,
       isPurePara: isPurePara,
