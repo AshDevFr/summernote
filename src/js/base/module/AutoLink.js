@@ -8,7 +8,7 @@ define([
   var AutoLink = function (context) {
     var self = this;
     var linkPattern = /^((http|https|ftp|mailto):\/\/([^\s\.\/]+\.){1,2}(\w+)([\w+\/\?\=\%\(\)\-\_]*))$/,
-        httpPattern = /^(www\.\w+\.[a-z]{2,3}[\w+\/\?\=\%\(\)]*)$/;
+        httpPattern = /^(www\.\w+\.[a-z]{2,3}[\w+\/\?\=\%\(\)\-\_]*)$/;
 
     this.events = {
       'summernote.keydown': function (we, e) {
