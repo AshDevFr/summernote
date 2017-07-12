@@ -6,7 +6,7 @@
  * Copyright 2013-2016 Alan Hong. and other contributors
  * summernote may be freely distributed under the MIT license./
  *
- * Date: 2017-06-15T23:07Z
+ * Date: 2017-07-12T16:42Z
  */
 (function (factory) {
   /* global define */
@@ -5063,7 +5063,7 @@
   var AutoLink = function (context) {
     var self = this;
     var linkPattern = /^((http|https|ftp|mailto):\/\/([^\s\.\/]+\.){1,2}(\w+)([\w+\/\?\=\%\(\)\-\_]*))$/,
-        httpPattern = /^(www\.\w+\.[a-z]{2,3}[\w+\/\?\=\%\(\)]*)$/;
+        httpPattern = /^(www\.\w+\.[a-z]{2,3}[\w+\/\?\=\%\(\)\-\_]*)$/;
 
     this.events = {
       'summernote.keydown': function (we, e) {
