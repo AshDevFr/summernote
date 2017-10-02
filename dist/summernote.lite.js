@@ -1,12 +1,12 @@
 /**
- * Super simple wysiwyg editor v0.8.58
+ * Super simple wysiwyg editor v0.8.60
  * http://summernote.org/
  *
  * summernote.js
  * Copyright 2013-2016 Alan Hong. and other contributors
  * summernote may be freely distributed under the MIT license./
  *
- * Date: 2017-07-12T16:42Z
+ * Date: 2017-10-02T15:45Z
  */
 (function (factory) {
   /* global define */
@@ -3443,10 +3443,10 @@
       var head = list.head(paras);
       var last = list.last(paras);
 
-      var prevList = dom.isList(head.previousSibling) && head.previousSibling &&
-        dom.isType(last.previousSibling, listName);
-      var nextList = dom.isList(last.nextSibling) && last.nextSibling &&
-        dom.isType(last.nextSibling, listName);
+      var prevList = dom.isList(head.previousSibling) &&
+        dom.isType(last.previousSibling, listName) && head.previousSibling;
+      var nextList = dom.isList(last.nextSibling) &&
+        dom.isType(last.nextSibling, listName) && last.nextSibling;
 
       var listNode = prevList || dom.insertAfter(dom.create(listName || 'UL'), last);
 
@@ -4535,7 +4535,7 @@
   };
 
   $.summernote = $.extend($.summernote, {
-    version: '0.8.58',
+    version: '0.8.60',
     ui: ui,
 
     options: {
