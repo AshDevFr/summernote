@@ -48,7 +48,7 @@
     "load-grunt-tasks": "0.2.0",
     "mocha": "^2.3.4",
     "open": "0.0.4",
-    "phantomjs": "^2.1.7",
+    "phantomjs": "2.1.7",
     "requirejs": "^2.1.22"
   }
 }

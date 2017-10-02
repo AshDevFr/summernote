@@ -27,6 +27,8 @@ module.exports = function (config) {
       type: 'lcov',
       dir: 'test/coverage/',
       includeAllSources: true
-    }
+    },
+    browserDisconnectTolerance: 3,
+    browserNoActivityTimeout: 30000
   });
 };
