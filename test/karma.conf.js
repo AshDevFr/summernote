@@ -20,7 +20,6 @@ module.exports = function (config) {
     ],
     // Chrome, ChromeCanary, Firefox, Opera, Safari, PhantomJS, IE
     browsers: ['Chrome'],
-    captureTimeout: 60000,
     singleRun: false,
     preprocessors: { 'src/js/**/!(app|intro|outro).js': 'coverage' },
     coverageReporter: {
@@ -28,7 +27,10 @@ module.exports = function (config) {
       dir: 'test/coverage/',
       includeAllSources: true
     },
-    browserDisconnectTolerance: 3,
-    browserNoActivityTimeout: 30000
+    retryLimit: 5,
+    browserDisconnectTolerance: 5,
+    browserNoActivityTimeout: 60000,
+    browserDisconnectTimeout: 30000,
+    captureTimeout: 60000
   });
 };
