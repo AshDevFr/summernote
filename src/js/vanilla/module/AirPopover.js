@@ -477,6 +477,17 @@ define([
       function processEmptyNodes(nodes) {
         if (nodes && nodes.length) {
           nodes.forEach(function (node) {
+            var ancestor = node.parentNode;
+            if (ancestor) {
+              if (rngSave.prevPoint && node === rngSave.prevPoint.node) {
+                rngSave.prevPoint.node = ancestor;
+                rngSave.prevPoint.offset += dom.position(node);
+              }
+              if (rngSave.nextPoint && node === rngSave.nextPoint.node) {
+                rngSave.nextPoint.node = ancestor;
+                rngSave.nextPoint.offset += dom.position(node);
+              }
+            }
             dom.remove(node);
           });
         }
