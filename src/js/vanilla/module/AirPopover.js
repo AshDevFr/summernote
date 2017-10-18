@@ -231,6 +231,7 @@ define([
       rng = self.getFullParaRange(rng);
       rng = self.createPara(rng);
       rng = unWrapBR(rng);
+      rng = removeEmptyNodes(rng);
       rng = normalizePara(rng);
       rng = unWrapPara(rng);
       rng = wrapVoid(rng);
@@ -450,6 +451,38 @@ define([
       return rng;
     }
 
+    function removeEmptyNodes(rng) {
+      if (!$editable.is(':focus')) {
+        $editable.focus();
+      }
+      rng = rng || self.lastRange || range.create(editable);
+      var rngSave = saveRng(rng);
+
+      var nodes = getNodes(),
+          i = 0;
+      while (nodes && nodes.length && i < 100) {
+        processEmptyNodes(nodes);
+        i++;
+        nodes = getNodes();
+      }
+
+      return restoreRng(rngSave);
+
+      function getNodes() {
+        return rng.nodes().filter(function (node) {
+          return (dom.isB(node) || dom.isI(node) || dom.isU(node) || dom.isS(node)) && dom.isEmpty(node);
+        });
+      }
+
+      function processEmptyNodes(nodes) {
+        if (nodes && nodes.length) {
+          nodes.forEach(function (node) {
+            dom.remove(node);
+          });
+        }
+      }
+    }
+
     function unWrapPara(rng) {
       if (!$editable.is(':focus')) {
         $editable.focus();
@@ -460,7 +493,7 @@ define([
       var nodes = rng.nodes().filter(function (node) {
         return dom.isDiv(node) && !dom.isEditable(node) &&
           node.childNodes && list.from(node.childNodes).filter(function (node) {
-            return dom.isPara(node) || dom.isVoid(node);
+            return (dom.isPara(node) || dom.isVoid(node)) && !dom.isBR(node);
           }).length === node.childNodes.length;
       });
 
@@ -470,11 +503,11 @@ define([
         nodes.forEach(function (node) {
           var ancestor = node.parentNode;
           if (ancestor) {
-            if (node === rngSave.prevPoint.node) {
+            if (rngSave.prevPoint && node === rngSave.prevPoint.node) {
               rngSave.prevPoint.node = ancestor;
               rngSave.prevPoint.offset += dom.position(node);
             }
-            if (node === rngSave.nextPoint.node) {
+            if (rngSave.nextPoint && node === rngSave.nextPoint.node) {
               rngSave.nextPoint.node = ancestor;
               rngSave.nextPoint.offset += dom.position(node);
             }
