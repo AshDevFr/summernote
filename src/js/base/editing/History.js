@@ -93,6 +93,13 @@ define(['summernote/base/core/range'], function (range) {
      * recorded undo
      */
     this.recordUndo = function () {
+      var snapshot = makeSnapshot();
+
+      if (stack[stackOffset] && snapshot.contents === stack[stackOffset].contents &&
+        JSON.stringify(snapshot.bookmark) === JSON.stringify(stack[stackOffset].bookmark)) {
+        return;
+      }
+
       stackOffset++;
 
       // Wash out stack after stackOffset
@@ -101,7 +108,7 @@ define(['summernote/base/core/range'], function (range) {
       }
 
       // Create new snapshot and push it to the end
-      stack.push(makeSnapshot());
+      stack.push(snapshot);
     };
   };
 
