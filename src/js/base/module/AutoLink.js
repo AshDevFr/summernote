@@ -47,7 +47,12 @@ define([
 
       if (node) {
         this.lastWordRange.insertNode(node);
-        range.createFromNode(node).collapse().select();
+        var rng = range.createFromNodeAfter(node).select();
+        var point = rng.getEndPoint();
+        if (point.node === node) {
+          var nextPoint = dom.nextPoint(point);
+          range.create(nextPoint.node, nextPoint.offset).select();
+        }
 
         this.lastWordRange = null;
         context.invoke('editor.focus');
