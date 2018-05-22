@@ -11,6 +11,12 @@ define(['summernote/base/core/range'], function (range) {
 
     var makeSnapshot = function () {
       var rng = range.create(editable);
+      var commonAncestor = rng.commonAncestor() || (rng.sc.isEqualNode(rng.ec)) ? rng.sc : null;
+      if (!editable.contains(commonAncestor)) {
+        // Return if the current range is outside of the editor.
+        return;
+      }
+
       var emptyBookmark = {s: {path: [], offset: 0}, e: {path: [], offset: 0}};
 
       return {
@@ -94,6 +100,10 @@ define(['summernote/base/core/range'], function (range) {
      */
     this.recordUndo = function () {
       var snapshot = makeSnapshot();
+
+      if (!snapshot) {
+        return;
+      }
 
       if (stack[stackOffset] && snapshot.contents === stack[stackOffset].contents &&
         JSON.stringify(snapshot.bookmark) === JSON.stringify(stack[stackOffset].bookmark)) {

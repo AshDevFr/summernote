@@ -6,7 +6,7 @@
  * Copyright 2013-2016 Alan Hong. and other contributors
  * summernote may be freely distributed under the MIT license./
  *
- * Date: 2017-12-04T23:00Z
+ * Date: 2018-05-22T22:32Z
  */
 (function (factory) {
   /* global define */
@@ -3234,6 +3234,12 @@
 
     var makeSnapshot = function () {
       var rng = range.create(editable);
+      var commonAncestor = rng.commonAncestor() || (rng.sc.isEqualNode(rng.ec)) ? rng.sc : null;
+      if (!editable.contains(commonAncestor)) {
+        // Return if the current range is outside of the editor.
+        return;
+      }
+
       var emptyBookmark = {s: {path: [], offset: 0}, e: {path: [], offset: 0}};
 
       return {
@@ -3317,6 +3323,10 @@
      */
     this.recordUndo = function () {
       var snapshot = makeSnapshot();
+
+      if (!snapshot) {
+        return;
+      }
 
       if (stack[stackOffset] && snapshot.contents === stack[stackOffset].contents &&
         JSON.stringify(snapshot.bookmark) === JSON.stringify(stack[stackOffset].bookmark)) {
