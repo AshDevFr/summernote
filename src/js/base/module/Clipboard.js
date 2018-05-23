@@ -28,6 +28,12 @@ define([
       return (agent.isMSIE && agent.browserVersion > 10) || agent.isFF;
     };
 
+    var options = context.options;
+
+    this.shouldInitialize = function () {
+      return !options.disableClipboard;
+    };
+
     this.initialize = function () {
       // [workaround] getting image from clipboard
       //  - IE11 and Firefox: CTRL+v hook

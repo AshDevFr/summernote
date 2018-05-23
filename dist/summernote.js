@@ -6,7 +6,7 @@
  * Copyright 2013-2016 Alan Hong. and other contributors
  * summernote may be freely distributed under the MIT license./
  *
- * Date: 2017-12-04T23:00Z
+ * Date: 2018-05-23T16:34Z
  */
 (function (factory) {
   /* global define */
@@ -4566,6 +4566,12 @@
 
     this.needKeydownHook = function () {
       return (agent.isMSIE && agent.browserVersion > 10) || agent.isFF;
+    };
+
+    var options = context.options;
+
+    this.shouldInitialize = function () {
+      return !options.disableClipboard;
     };
 
     this.initialize = function () {
