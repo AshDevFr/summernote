@@ -3,7 +3,7 @@ sudo: false
 node_js: 7
 cache:
   directories:
-    - node_modules
+  - node_modules
 before_script:
 - node --version
 - npm --version
@@ -18,7 +18,7 @@ deploy:
   provider: npm
   email: ashdevfr@gmail.com
   api_key:
-    secure: DCBPi6SVGY++JpSL59j+Y6l6m03uVzM6xF79qs7DkS7IvTSuO8VYudOUqGA01UOHLkw5pdxJf00ovCo0vhst5fcTVvWYi27W8OcsHbT/qaoZqVbQnmZtD/QLDyXUtJZGkXs21j8fwihJgLUBAO9YtJkcXxMSq5qfM8vQdX5Q+7Z6wUAA3pyBzRnXjvLjxmDlHl2jVK0S7a/6A7Wq7stl9hBkYi1pgGu+2cHH+UezmRkwhR3xiBHBN66PkMBWlzJwuHEk31tPcKXGjuYqi2W8UqkI5VekZ+c2suCeo0jIXKCVvPHaXcsnKpUGFE1kpXkfRwlUuKm+vaA4AhtzYUTgVHbgF0X7BxjFiSGaIZwR6+sAEBKoIcMx2McaI0JGb6C4Fg092CI93pjNxtvdLifn5rd9FDFvNEUnYA7NpWl5MYNIK8RcCGIDDNdP/bp40GbQs3JAAJA6rPk1xKy+4ocwLbk4sdE509WO0lLjQkUIEfs2XmzE5NMqvUteL3o3BZuNbCj9Nw6Vc5uujeZZvXiJwcTVw2NBEWdlXiun6OXk98GckWeOcTjTtLhDmHoHfdBi31nhjdCqr5ZYbYpuHQEcSoT/2t60tO/MZcDDdT1hGLlI9LdN4u2wMXONQbfi6fDYV8Cp9fmOs5sVEVlSxapjPuS6137KqqEm97JMQPv3N7U=
+    secure: C5NIZoZpXp0tbEBXXRckjs/W8qOugedzXl/AMJDOWH+HqaYXdZABU5fV0ETmD+8AKeQa93LptEOb0ULYOzgV/hUsKZOVmztlOzh6ahKVYQ9HlN/8M84EQn5FC1c5ykPACxOjWvc8EnM/HTh+gG9tXnrz8MXGae5Dd8n1SQoMsqPnm4POCST12jSFWJ51Hp2bv9W3CeaoBVbRRPgvqMgrA4htNRaQcxlYPGmpQuo2zLdeVbS+SiiM55EU5RM0BaiHf3drNiXurh/dlWMhb+pHduCUTLO+r8lOvXuR+lNrwJZB+8RXfVuRVpeivX+Tcu5KaFgsr1iQc94NQuQ6/KgPYPVdyXyRjHqIAMep7+nccWblZoTuUlNk0r+jWT4lnDzahy9vLFT6077zKZqnUrYAJJyl2/xPTFRwkSvEnPoY4p4CJ69e/eqec0diq5xMLMfEVYA6hv8z8Y/A2WVXWC/5qCEGMbEXFctJmcXDkzHixkwwX+mGMYTUQzBehdNzHfTM5rYpvWIwNDLTZOz+4A1Cwue0lCpt3DuP3f331I7ioAGs5N6Rh8qcXoFqJNPCaOqM4kdlbNCJqI9mYC+LnuAayOY0dvheIOaBSVl4N3HqUHDByO+rPPLOjQqCgDvmrWl4unOHRARN0WplLTEL5a39FqtMzwKAFbb4WOQSWR/MHnY=
   on:
     tags: true
     branch: develop
