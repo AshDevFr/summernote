@@ -107,7 +107,7 @@ define([
         handleUpdate.cancel();
       }
       var styleInfo = context.invoke('editor.currentStyle');
-      if (styleInfo.range && (!styleInfo.range.isCollapsed() || force)) {
+      if (styleInfo && styleInfo.range && (!styleInfo.range.isCollapsed() || force)) {
         var rect = list.last(styleInfo.range.getClientRects());
         var bnd;
         if (rect) {
