@@ -1,7 +1,7 @@
 {
   "name": "winternote",
   "description": "Super simple WYSIWYG editor",
-  "version": "0.8.64",
+  "version": "0.8.65",
   "license": "MIT",
   "keywords": [
     "editor",
